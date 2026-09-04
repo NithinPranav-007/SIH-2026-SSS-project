@@ -1,0 +1,146 @@
+﻿# ============================================================
+# SONAR-INTEL .gitignore
+# Python | FastAPI | ML/PyTorch | React/Node | Docker | PostGIS
+# ============================================================
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+develop-eggs/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+sdist/
+var/
+wheels/
+parts/
+downloads/
+lib/
+lib64/
+
+# Test & coverage artifacts
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.coveragerc
+
+# Type checkers
+.mypy_cache/
+.pytype/
+.pyre/
+pyrightconfig.json
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# ---- Environment & Secrets ----
+.env
+.env.*
+!.env.example          # Keep the example template committed
+backend/.env
+backend/.env.*
+!backend/.env.example  # Keep the example template committed
+
+# ---- Database ----
+*.db
+*.sqlite
+*.sqlite3
+sonar_intel_fallback.db
+test_sonar_intel.db
+
+# ---- ML / PyTorch / Ultralytics ----
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.pb
+runs/
+wandb/
+mlruns/
+lightning_logs/
+# Huggingface model cache (downloaded weights)
+ml/models/**/.cache/
+ml/models/**/cache/
+.cache/
+
+# ---- Data: Runtime-generated files only ----
+# Demo source data (curated benchmarks) ARE committed: data/demo/
+# Runtime upload/processing artifacts are NOT committed
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+# Prevent committing runtime demo copies
+data/raw/DEMO_*
+
+# ---- Node / React / Frontend ----
+frontend-new/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+frontend-new/dist/
+frontend-new/.cache/
+frontend-new/coverage/
+
+# ---- Outputs (training artifacts, generated reports) ----
+outputs/training/*
+outputs/annotation_samples/*
+outputs/yolo_verification/*
+outputs/reports/*
+outputs/geojson/*
+!outputs/.gitkeep
+
+# ---- Docker ----
+.docker/
+
+# ---- IDE / Editor ----
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+
+# ---- OS-generated ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ---- Logs ----
+*.log
+logs/
+pip-log.txt
+pip-delete-this-directory.txt

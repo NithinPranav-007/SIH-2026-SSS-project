@@ -1,0 +1,40 @@
+﻿# ============================================================
+# SONAR-INTEL Backend Dockerfile
+# ============================================================
+# Multi-stage build for a production-ready Python FastAPI image.
+# Build: docker build -t sonar-intel-backend -f Dockerfile.backend .
+
+FROM python:3.11-slim AS base
+
+# System dependencies for OpenCV, PostgreSQL client, and scientific libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgl1-mesa-glx \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies (cached layer)
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application source
+COPY backend/ ./backend/
+COPY ml/ ./ml/
+COPY pyproject.toml .
+
+# Create required data directories
+RUN mkdir -p data/raw data/processed data/demo
+
+# Non-root user for security
+RUN useradd -m -u 1000 sonaruser && chown -R sonaruser:sonaruser /app
+USER sonaruser
+
+EXPOSE 8000
+
+# Use uvicorn with production settings
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--no-access-log"]

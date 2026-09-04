@@ -1,0 +1,76 @@
+﻿version: "3.8"
+
+# ============================================================
+# SONAR-INTEL Docker Compose
+# ============================================================
+# Copy .env.example to .env and fill in values before running.
+# Required: POSTGRES_PASSWORD (or leave DATABASE_URL blank for SQLite fallback)
+# ============================================================
+
+services:
+  # -----------------------------------------------------------
+  # PostGIS Database
+  # -----------------------------------------------------------
+  postgis:
+    image: postgis/postgis:15-3.3
+    container_name: sonar_intel_postgis
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sonar_intel}
+      POSTGRES_USER: ${POSTGRES_USER:-sonar_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sonar_user} -d ${POSTGRES_DB:-sonar_intel}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # -----------------------------------------------------------
+  # FastAPI Backend
+  # -----------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: sonar_intel_backend
+    env_file: backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-sonar_user}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB:-sonar_intel}
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./ml/models:/app/ml/models:ro
+    depends_on:
+      postgis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # -----------------------------------------------------------
+  # React Frontend
+  # -----------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend-new
+      dockerfile: Dockerfile
+    container_name: sonar_intel_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgis_data:

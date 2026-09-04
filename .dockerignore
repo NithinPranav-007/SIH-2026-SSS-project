@@ -1,0 +1,48 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+env/
+venv/
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data (large files managed via volumes)
+data/raw/*
+data/processed/*
+data/interim/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ML artifacts (weights mounted separately via volume)
+outputs/
+runs/
+wandb/
+*.pt
+
+# Node / Frontend
+frontend-new/node_modules/
+frontend-new/dist/
+frontend-new/.cache/
+
+# Secrets and local config
+.env
+backend/.env
+*.db
+*.sqlite
+*.sqlite3
+
+# Git and IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Docs (not needed in container)
+docs/
