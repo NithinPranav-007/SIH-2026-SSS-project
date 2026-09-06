@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Cpu, ShieldCheck, Activity, Layers, Database, RefreshCw, CheckCircle2, AlertTriangle, GitBranch } from 'lucide-react';
+import { apiService } from '../services/api';
 
 export const MLMonitorPage: React.FC = () => {
   const [metrics, setMetrics] = useState<any>(null);
@@ -9,12 +10,12 @@ export const MLMonitorPage: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [resMetrics, resModels] = await Promise.all([
-        fetch('/api/ml/metrics'),
-        fetch('/api/ml/models')
+      const [dataMetrics, dataModels] = await Promise.all([
+        apiService.getMLMetrics(),
+        apiService.getMLModels()
       ]);
-      if (resMetrics.ok) setMetrics(await resMetrics.json());
-      if (resModels.ok) setModels(await resModels.json());
+      setMetrics(dataMetrics);
+      setModels(dataModels);
     } catch (err) {
       console.error('Failed to load ML monitor data', err);
     } finally {

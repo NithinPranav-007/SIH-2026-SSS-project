@@ -114,5 +114,48 @@ export const apiService = {
     const response = await client.get('/api/pipeline/info');
     return response.data;
   },
+
+  // ---- Intelligence & Active Learning Endpoints ----
+
+  async queryAnalyst(query: string, limit = 30): Promise<any> {
+    const response = await client.post('/api/analyst/query', { query, limit });
+    return response.data;
+  },
+
+  async getUnknownAnomalies(minNovelty = 40.0, limit = 50): Promise<Contact[]> {
+    const response = await client.get<Contact[]>('/api/anomalies/unknown', {
+      params: { min_novelty: minNovelty, limit }
+    });
+    return response.data;
+  },
+
+  async getCuratedSamples(priority = 'MEDIUM', limit = 50): Promise<{ sample_count: number; samples: any[] }> {
+    const response = await client.get('/api/active-learning/samples', {
+      params: { priority, limit }
+    });
+    return response.data;
+  },
+
+  async exportActiveLearningDataset(includeUncertain = false): Promise<any> {
+    const response = await client.post('/api/active-learning/export', null, {
+      params: { include_uncertain: includeUncertain }
+    });
+    return response.data;
+  },
+
+  async getMLMetrics(): Promise<any> {
+    const response = await client.get('/api/ml/metrics');
+    return response.data;
+  },
+
+  async getMLModels(): Promise<any> {
+    const response = await client.get('/api/ml/models');
+    return response.data;
+  },
+
+  async getResurveyRecommendations(surveyId: string): Promise<any> {
+    const response = await client.get(`/api/resurvey/recommendations/${surveyId}`);
+    return response.data;
+  },
 };
 

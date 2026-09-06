@@ -17,6 +17,17 @@ SCIENTIFIC / DOMAIN HONESTY RULES:
 from typing import Dict, Any, Optional, Tuple
 
 
+try:
+    from backend.app.core.config import settings
+    _DEFAULT_CRITICAL = settings.risk.CRITICAL_THRESHOLD
+    _DEFAULT_HIGH = settings.risk.HIGH_THRESHOLD
+    _DEFAULT_MEDIUM = settings.risk.MEDIUM_THRESHOLD
+except Exception:
+    _DEFAULT_CRITICAL = 80.0
+    _DEFAULT_HIGH = 60.0
+    _DEFAULT_MEDIUM = 35.0
+
+
 class RiskScorer:
     """
     Computes maritime operational risk score from contact telemetry and dimensions.
@@ -34,6 +45,16 @@ class RiskScorer:
         "tire": 20.0,
         "seabed_clutter": 10.0
     }
+
+    def __init__(
+        self,
+        critical_threshold: Optional[float] = None,
+        high_threshold: Optional[float] = None,
+        medium_threshold: Optional[float] = None
+    ):
+        self.critical_thresh = _DEFAULT_CRITICAL if critical_threshold is None else critical_threshold
+        self.high_thresh = _DEFAULT_HIGH if high_threshold is None else high_threshold
+        self.medium_thresh = _DEFAULT_MEDIUM if medium_threshold is None else medium_threshold
 
     def compute_risk(
         self,
@@ -76,12 +97,12 @@ class RiskScorer:
         raw_score = (base * evidence_factor) + size_factor + novelty_factor
         score = round(float(min(99.0, max(5.0, raw_score))), 1)
 
-        # Tier assignment
-        if score >= 80.0:
+        # Tier assignment using configurable thresholds
+        if score >= self.critical_thresh:
             level = "CRITICAL"
-        elif score >= 60.0:
+        elif score >= self.high_thresh:
             level = "HIGH"
-        elif score >= 35.0:
+        elif score >= self.medium_thresh:
             level = "MEDIUM"
         else:
             level = "LOW"

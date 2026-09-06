@@ -51,11 +51,22 @@ def compute_containment(box1: Dict[str, int], box2: Dict[str, int]) -> float:
     return float(intersection_area) / float(min_area)
 
 
+try:
+    from backend.app.core.config import settings
+    _DEFAULT_NMS_IOU = settings.detector.NMS_IOU_THRESHOLD
+    _DEFAULT_MIN_BOX = settings.detector.MIN_BOX_SIZE
+except Exception:
+    _DEFAULT_NMS_IOU = 0.35
+    _DEFAULT_MIN_BOX = 15
+
+
 def deduplicate_detections(
     detections: List[Dict[str, Any]],
-    iou_threshold: float = 0.35,
-    min_box_size: int = 15
+    iou_threshold: float = None,
+    min_box_size: int = None
 ) -> List[Dict[str, Any]]:
+    iou_threshold = _DEFAULT_NMS_IOU if iou_threshold is None else iou_threshold
+    min_box_size = _DEFAULT_MIN_BOX if min_box_size is None else min_box_size
     """
     Suppresses degenerate boundary slivers and performs Non-Maximum Suppression (NMS)
     plus containment filtering across overlapping tile bounds.

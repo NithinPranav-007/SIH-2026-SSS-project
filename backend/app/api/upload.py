@@ -1,4 +1,4 @@
-﻿"""
+"""
 Survey Ingestion / Upload API Endpoint.
 
 POST /api/surveys/upload
@@ -16,16 +16,12 @@ from backend.app.database.repository import SurveyRepository
 from backend.app.services.sonar_service import SonarService
 from backend.app.schemas.survey import SurveyUploadResponse
 
+from backend.app.core.config import settings
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/surveys", tags=["Surveys"])
 sonar_service = SonarService()
-
-# Configurable max upload size — defaults to 100 MB
-_MAX_UPLOAD_BYTES = int(os.environ.get("MAX_UPLOAD_SIZE_MB", "100")) * 1024 * 1024
-
-# Allowed MIME type prefixes for sonar imagery
-_ALLOWED_MIME_PREFIXES = ("image/png", "image/jpeg", "image/tiff", "image/gif", "image/bmp")
 
 
 @router.post("/upload", response_model=SurveyUploadResponse, status_code=status.HTTP_201_CREATED)
@@ -38,9 +34,19 @@ async def upload_survey(
     """
     Ingests, validates, and stores a side-scan sonar swath and optional navigation log.
     The raw image is preserved unconditionally.
+    Enforces security checks: file size limits, MIME validation, extension check, path traversal prevention.
     """
     if not sonar_file.filename:
         raise HTTPException(status_code=400, detail="Missing sonar image file.")
+
+    # Sanitize original filename against directory traversal
+    clean_filename = os.path.basename(sonar_file.filename).strip()
+    ext = os.path.splitext(clean_filename)[1].lower()
+    if ext not in settings.security.ALLOWED_IMAGE_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file extension '{ext}'. Allowed: {', '.join(settings.security.ALLOWED_IMAGE_EXTENSIONS)}"
+        )
 
     # Validate MIME type early to reject non-image uploads
     content_type = (sonar_file.content_type or "").lower()
@@ -50,17 +56,18 @@ async def upload_survey(
             detail=f"Invalid file type '{content_type}'. Only image files (PNG, JPEG, TIFF) are accepted."
         )
 
-    # Generate or use survey ID
+    # Generate or use survey ID (sanitized)
     timestamp_str = time.strftime("%Y%m%d_%H%M%S")
-    survey_id = survey_id_override or f"SURV_{timestamp_str}"
+    raw_survey_id = survey_id_override or f"SURV_{timestamp_str}"
+    survey_id = "".join(c for c in raw_survey_id if c.isalnum() or c in ("-", "_"))
 
     # Read image contents (enforcing size limit)
     file_bytes = await sonar_file.read()
     if len(file_bytes) == 0:
         raise HTTPException(status_code=400, detail="Uploaded sonar file is empty.")
 
-    if len(file_bytes) > _MAX_UPLOAD_BYTES:
-        limit_mb = _MAX_UPLOAD_BYTES // (1024 * 1024)
+    if len(file_bytes) > settings.security.MAX_UPLOAD_SIZE_BYTES:
+        limit_mb = settings.security.MAX_UPLOAD_SIZE_BYTES // (1024 * 1024)
         raise HTTPException(
             status_code=413,
             detail=f"Uploaded file exceeds the maximum allowed size of {limit_mb} MB."
@@ -68,25 +75,33 @@ async def upload_survey(
 
     logger.info(
         "Ingesting survey '%s': file='%s' size=%d bytes",
-        survey_id, sonar_file.filename, len(file_bytes)
+        survey_id, clean_filename, len(file_bytes)
     )
 
     try:
         raw_path, width, height, quality = sonar_service.store_raw_upload(
             file_bytes=file_bytes,
             survey_id=survey_id,
-            original_filename=sonar_file.filename
+            original_filename=clean_filename
         )
     except Exception as exc:
         logger.exception("Image validation failed for survey '%s'", survey_id)
         raise HTTPException(status_code=422, detail=f"Image validation failed: {str(exc)}")
 
-    # Handle optional navigation CSV
+    # Handle optional navigation CSV with extension & size validation
     nav_path = None
     if nav_file and nav_file.filename:
+        clean_nav_filename = os.path.basename(nav_file.filename).strip()
+        nav_ext = os.path.splitext(clean_nav_filename)[1].lower()
+        if nav_ext not in settings.security.ALLOWED_NAV_EXTENSIONS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported navigation file format '{nav_ext}'. Allowed: {', '.join(settings.security.ALLOWED_NAV_EXTENSIONS)}"
+            )
+
         nav_bytes = await nav_file.read()
         if len(nav_bytes) > 0:
-            nav_dir = "data/raw"
+            nav_dir = str(settings.storage.RAW_DIR)
             os.makedirs(nav_dir, exist_ok=True)
             nav_path = os.path.join(nav_dir, f"{survey_id}_nav.csv")
             with open(nav_path, "wb") as f:

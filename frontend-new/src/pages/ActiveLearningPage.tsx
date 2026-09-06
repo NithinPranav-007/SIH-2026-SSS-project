@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Database, Download, RefreshCw, CheckCircle2, XCircle, AlertCircle, ShieldAlert } from 'lucide-react';
+import { apiService } from '../services/api';
 
 export const ActiveLearningPage: React.FC = () => {
   const [samples, setSamples] = useState<any[]>([]);
@@ -10,11 +11,8 @@ export const ActiveLearningPage: React.FC = () => {
   const fetchSamples = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/active-learning/samples?priority=MEDIUM');
-      if (res.ok) {
-        const data = await res.json();
-        setSamples(data.samples || []);
-      }
+      const data = await apiService.getCuratedSamples('MEDIUM');
+      setSamples(data.samples || []);
     } catch (err) {
       console.error('Failed to load active learning samples', err);
     } finally {
@@ -30,11 +28,8 @@ export const ActiveLearningPage: React.FC = () => {
     setExporting(true);
     setExportSuccess(null);
     try {
-      const res = await fetch('/api/active-learning/export', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        setExportSuccess(`Successfully exported ${data.exported_contacts} training annotations to ${data.output_directory}`);
-      }
+      const data = await apiService.exportActiveLearningDataset();
+      setExportSuccess(`Successfully exported ${data.exported_contacts} training annotations to ${data.output_directory}`);
     } catch (err) {
       console.error('Export failed', err);
     } finally {

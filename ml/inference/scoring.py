@@ -22,22 +22,39 @@ or 'Probability of Debris'. This score is an operational triage metric.
 from typing import Dict, Any, Tuple
 
 
+try:
+    from backend.app.core.config import settings
+    _DEFAULT_W_CONF = settings.scoring.W_CONFIDENCE
+    _DEFAULT_W_CTXT = settings.scoring.W_CONTEXT
+    _DEFAULT_W_QUAL = settings.scoring.W_QUALITY
+    _DEFAULT_W_LOC = settings.scoring.W_LOCALIZATION
+    _DEFAULT_HIGH = settings.scoring.HIGH_THRESHOLD
+    _DEFAULT_MED = settings.scoring.MEDIUM_THRESHOLD
+except Exception:
+    _DEFAULT_W_CONF = 0.50
+    _DEFAULT_W_CTXT = 0.25
+    _DEFAULT_W_QUAL = 0.15
+    _DEFAULT_W_LOC = 0.10
+    _DEFAULT_HIGH = 0.72
+    _DEFAULT_MED = 0.48
+
+
 class PriorityScorer:
     def __init__(
         self,
-        w_confidence: float = 0.50,
-        w_context: float = 0.25,
-        w_quality: float = 0.15,
-        w_localization: float = 0.10,
-        high_threshold: float = 0.72,
-        medium_threshold: float = 0.48
+        w_confidence: float = None,
+        w_context: float = None,
+        w_quality: float = None,
+        w_localization: float = None,
+        high_threshold: float = None,
+        medium_threshold: float = None
     ):
-        self.w_conf = w_confidence
-        self.w_ctxt = w_context
-        self.w_qual = w_quality
-        self.w_loc = w_localization
-        self.high_thresh = high_threshold
-        self.med_thresh = medium_threshold
+        self.w_conf = _DEFAULT_W_CONF if w_confidence is None else w_confidence
+        self.w_ctxt = _DEFAULT_W_CTXT if w_context is None else w_context
+        self.w_qual = _DEFAULT_W_QUAL if w_quality is None else w_quality
+        self.w_loc = _DEFAULT_W_LOC if w_localization is None else w_localization
+        self.high_thresh = _DEFAULT_HIGH if high_threshold is None else high_threshold
+        self.med_thresh = _DEFAULT_MED if medium_threshold is None else medium_threshold
 
     def calculate_priority(
         self,

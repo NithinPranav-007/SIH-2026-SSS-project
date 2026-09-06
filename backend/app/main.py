@@ -39,16 +39,17 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("SONAR-INTEL API shutting down.")
 
+from backend.app.core.config import settings
+
 app = FastAPI(
-    title="SONAR-INTEL API",
+    title=settings.app.PROJECT_NAME,
     description="AI-Powered Side-Scan Sonar Marine Debris & Anomaly Detection API",
-    version="1.0.0",
+    version=settings.app.PROJECT_VERSION,
     lifespan=lifespan
 )
 
-# CORS Middleware for React Frontend
-allowed_origins_env = os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
-origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+# CORS Middleware configured centrally via settings.server.CORS_ORIGINS
+origins = settings.server.CORS_ORIGINS
 
 app.add_middleware(
     CORSMiddleware,

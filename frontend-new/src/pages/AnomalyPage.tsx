@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HelpCircle, AlertTriangle, Search, Filter, Compass, ShieldAlert, Sparkles, RefreshCw } from 'lucide-react';
 import { Contact } from '../types/detection';
+import { apiService } from '../services/api';
 
 interface AnomalyPageProps {
   onSelectContact?: (contact: Contact) => void;
@@ -15,11 +16,8 @@ export const AnomalyPage: React.FC<AnomalyPageProps> = ({ onSelectContact }) => 
   const fetchAnomalies = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/anomalies/unknown?min_novelty=${minNovelty}`);
-      if (res.ok) {
-        const data = await res.json();
-        setAnomalies(data);
-      }
+      const data = await apiService.getUnknownAnomalies(minNovelty);
+      setAnomalies(data);
     } catch (err) {
       console.error('Failed to load anomalies', err);
     } finally {

@@ -11,11 +11,22 @@ from typing import List, Dict, Any, Tuple
 import numpy as np
 
 
+try:
+    from backend.app.core.config import settings
+    _DEFAULT_TILE_SIZE = settings.sonar.TILE_SIZE
+    _DEFAULT_OVERLAP = settings.sonar.TILE_OVERLAP
+except Exception:
+    _DEFAULT_TILE_SIZE = 640
+    _DEFAULT_OVERLAP = 0.20
+
+
 def generate_tiles(
     image: np.ndarray,
-    tile_size: int = 640,
-    overlap: float = 0.20
+    tile_size: int = None,
+    overlap: float = None
 ) -> List[Dict[str, Any]]:
+    tile_size = _DEFAULT_TILE_SIZE if tile_size is None else tile_size
+    overlap = _DEFAULT_OVERLAP if overlap is None else overlap
     """
     Slices an image into overlapping tiles of size tile_size x tile_size.
     

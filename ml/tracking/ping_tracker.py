@@ -28,6 +28,17 @@ class TrackObservation:
     centroid_y: float
 
 
+try:
+    from backend.app.core.config import settings
+    _DEFAULT_PING_GAP = int(os.getenv("TRACK_MAX_PING_GAP", "40"))
+    _DEFAULT_X_OVERLAP = float(os.getenv("TRACK_MIN_X_OVERLAP", "0.25"))
+    _DEFAULT_IOU_ASSOC = float(os.getenv("TRACK_IOU_ASSOC", "0.20"))
+except Exception:
+    _DEFAULT_PING_GAP = 40
+    _DEFAULT_X_OVERLAP = 0.25
+    _DEFAULT_IOU_ASSOC = 0.20
+
+
 class SonarPingTracker:
     """
     IoU and cross-track spatial association tracker for sonar waterfall imagery.
@@ -37,13 +48,13 @@ class SonarPingTracker:
 
     def __init__(
         self,
-        max_ping_gap: int = 40,        # Maximum Y pixel gap between consecutive observations
-        min_x_overlap_ratio: float = 0.25, # Minimum horizontal overlap to associate
-        iou_assoc_threshold: float = 0.20
+        max_ping_gap: Optional[int] = None,
+        min_x_overlap_ratio: Optional[float] = None,
+        iou_assoc_threshold: Optional[float] = None
     ):
-        self.max_ping_gap = max_ping_gap
-        self.min_x_overlap_ratio = min_x_overlap_ratio
-        self.iou_assoc_threshold = iou_assoc_threshold
+        self.max_ping_gap = _DEFAULT_PING_GAP if max_ping_gap is None else max_ping_gap
+        self.min_x_overlap_ratio = _DEFAULT_X_OVERLAP if min_x_overlap_ratio is None else min_x_overlap_ratio
+        self.iou_assoc_threshold = _DEFAULT_IOU_ASSOC if iou_assoc_threshold is None else iou_assoc_threshold
 
     def associate_detections(
         self,

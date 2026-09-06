@@ -13,12 +13,12 @@ logger = logging.getLogger(__name__)
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from backend.app.core.config import settings
 
 Base = declarative_base()
 
-# DATABASE_URL must be set via environment variable.
-# No credentials are hardcoded. Omit or leave blank to use SQLite fallback.
-DATABASE_URL = os.environ.get("DATABASE_URL", "")
+# DATABASE_URL is configured centrally through settings (supports PostgreSQL/PostGIS and SQLite)
+DATABASE_URL = settings.database.URL
 
 # Test primary connection and fallback gracefully if needed
 engine = None
@@ -27,8 +27,8 @@ if DATABASE_URL:
         try:
             test_engine = create_engine(
                 DATABASE_URL,
-                pool_pre_ping=False,
-                connect_args={"connect_timeout": 2}
+                pool_pre_ping=settings.database.POOL_PRE_PING,
+                connect_args={"connect_timeout": settings.database.CONNECT_TIMEOUT}
             )
             with test_engine.connect() as _conn:
                 pass
@@ -47,9 +47,8 @@ if DATABASE_URL:
         logger.info("Connected to SQLite database at %s", DATABASE_URL)
 
 if engine is None:
-    # Use SQLite fallback database (safe for development / demo)
-    fallback_path = os.path.join(os.path.dirname(__file__), "..", "..", "sonar_intel_fallback.db")
-    fallback_path = os.path.abspath(fallback_path)
+    # Use centralized SQLite fallback database (safe for development / demo)
+    fallback_path = settings.database.fallback_path
     engine = create_engine(
         f"sqlite:///{fallback_path}",
         connect_args={"check_same_thread": False}

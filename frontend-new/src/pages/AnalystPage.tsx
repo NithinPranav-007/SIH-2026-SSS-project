@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Sparkles, ShieldAlert, ArrowRight, CheckCircle2, AlertCircle, Compass } from 'lucide-react';
 import { Contact } from '../types/detection';
+import { apiService } from '../services/api';
 
 interface AnalystPageProps {
   onSelectContact?: (contact: Contact) => void;
@@ -24,15 +25,8 @@ export const AnalystPage: React.FC<AnalystPageProps> = ({ onSelectContact }) => 
     if (!q.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/analyst/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q, limit: 30 })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setResult(data);
-      }
+      const data = await apiService.queryAnalyst(q, 30);
+      setResult(data);
     } catch (err) {
       console.error('Analyst query failed', err);
     } finally {
