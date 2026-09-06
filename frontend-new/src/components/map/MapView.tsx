@@ -244,7 +244,7 @@ export const MapView: React.FC<MapViewProps> = ({
       c => c.latitude != null && c.longitude != null
     );
 
-    validContacts.forEach(contact => {
+    validContacts.forEach((contact, idx) => {
       const isSelected = selectedContact?.contact_id === contact.contact_id;
       const el = document.createElement('div');
       el.className = 'cursor-pointer select-none group relative';
@@ -289,12 +289,12 @@ export const MapView: React.FC<MapViewProps> = ({
             align-items: center;
             justify-content: center;
             font-family: 'JetBrains Mono', monospace;
-            font-size: ${isSelected ? '10px' : '9px'};
+            font-size: ${isSelected ? '11px' : '10px'};
             font-weight: 800;
             color: ${contact.priority === 'MEDIUM' ? '#1f1f1f' : '#ffffff'};
             transition: all 0.2s ease-in-out;
           ">
-            ${contact.contact_id}
+            ${idx + 1}
           </div>
         </div>
       `;

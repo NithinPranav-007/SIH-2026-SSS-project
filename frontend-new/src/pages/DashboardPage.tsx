@@ -311,7 +311,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   No candidates currently loaded. Select a benchmark swath from the top header.
                 </div>
               ) : (
-                contacts.slice(0, 5).map((contact) => {
+                contacts.slice(0, 5).map((contact, idx) => {
                   const isHigh = contact.priority === 'HIGH';
                   const isConfirmed = contact.review_status === 'CONFIRMED';
                   const isFalseAlarm = contact.review_status === 'FALSE_POSITIVE';
@@ -323,22 +323,25 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                         onSelectContact(contact);
                         onSelectScreen('sonar-analysis');
                       }}
-                      className="group p-4.5 rounded-2xl bg-[#fcfcfc] hover:bg-white border border-[#e6e6e6] hover:border-[#ff383c]/40 hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="group p-4 rounded-2xl bg-[#fcfcfc] hover:bg-white border border-[#e6e6e6] hover:border-[#ff383c]/40 hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer gap-3 min-w-0"
                     >
-                      <div className="flex items-center gap-4">
-                        {/* ID Badge Bucket */}
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-[#e6e6e6] text-[#1f1f1f] font-mono font-bold text-xs group-hover:border-[#ff383c] group-hover:text-[#ff383c] transition-colors">
-                          {contact.contact_id}
+                      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                        {/* Sequence Badge Bucket */}
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white border border-[#e6e6e6] text-[#1f1f1f] font-mono font-bold text-xs group-hover:border-[#ff383c] group-hover:text-[#ff383c] transition-colors shadow-sm">
+                          #{String(idx + 1).padStart(2, '0')}
                         </div>
 
                         {/* Details */}
-                        <div>
-                          <div className="flex items-center gap-2.5">
-                            <span className="font-bold text-[#1f1f1f] text-sm">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap min-w-0">
+                            <span 
+                              className="font-bold text-[#1f1f1f] text-sm truncate max-w-[200px]"
+                              title={contact.contact_id}
+                            >
                               {contact.contact_id}
                             </span>
                             <span
-                              className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full font-sans ${
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full font-sans shrink-0 ${
                                 isHigh
                                   ? 'bg-[#ff383c]/10 text-[#ff383c]'
                                   : 'bg-amber-50 text-amber-700'
@@ -346,12 +349,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                             >
                               {contact.priority} PRIORITY
                             </span>
-                            <span className="text-xs text-[#8e8e93]">
+                            <span className="text-xs text-[#8e8e93] shrink-0">
                               Confidence: <strong className="text-[#1f1f1f]">{Math.round(contact.confidence * 100)}%</strong>
                             </span>
                           </div>
 
-                          <p className="text-xs text-[#8e8e93] mt-1 font-sans">
+                          <p className="text-xs text-[#8e8e93] mt-1 font-sans truncate" title={`Survey Swath: ${contact.survey_id}`}>
                             Survey Swath: <span className="font-medium text-[#1f1f1f]">{contact.survey_id}</span> • Slant BBox: [{contact.bbox.x1}, {contact.bbox.y1}, {contact.bbox.x2}, {contact.bbox.y2}]
                           </p>
                         </div>
@@ -484,7 +487,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div className="p-4 rounded-2xl bg-[#fcfcfc] border border-[#e6e6e6]">
                     <div className="text-[10px] text-[#8e8e93] font-bold uppercase tracking-wider">Data Quality</div>
                     <div className="text-lg font-bold text-emerald-600 mt-1">
-                      {Math.round(survey.data_quality * 100)}%
+                      {survey.data_quality > 1 ? Math.round(survey.data_quality) : Math.round(survey.data_quality * 100)}%
                     </div>
                   </div>
 

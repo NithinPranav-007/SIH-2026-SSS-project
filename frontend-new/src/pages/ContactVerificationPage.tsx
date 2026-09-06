@@ -169,10 +169,12 @@ export const ContactVerificationPage: React.FC<ContactVerificationPageProps> = (
               Contact Verification Console
             </span>
           </div>
-          <h2 className="text-2xl font-extrabold text-[var(--color-text)] font-display flex items-center gap-2.5">
-            <ShieldCheck className="w-6 h-6 text-[var(--color-primary)]" />
-            Target {activeContact.contact_id} Verification
-            <span className="text-sm font-normal text-[var(--color-text-muted)]">
+          <h2 className="text-2xl font-extrabold text-[var(--color-text)] font-display flex items-center gap-2.5 min-w-0">
+            <ShieldCheck className="w-6 h-6 text-[var(--color-primary)] shrink-0" />
+            <span className="truncate max-w-[320px]" title={`Target ${activeContact.contact_id} Verification`}>
+              Target {activeContact.contact_id} Verification
+            </span>
+            <span className="text-sm font-normal text-[var(--color-text-muted)] shrink-0">
               ({currentIdx + 1} / {contacts.length})
             </span>
           </h2>
@@ -214,7 +216,7 @@ export const ContactVerificationPage: React.FC<ContactVerificationPageProps> = (
                       : 'text-[var(--color-text)] hover:bg-[var(--color-border)]'
                   }`}
                 >
-                  <span className="font-mono">{c.contact_id.slice(-6)}</span>
+                  <span className="font-mono">{c.contact_id.split('_').pop() || c.contact_id.slice(-6)}</span>
                   {c.priority === 'HIGH' && (
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isSelected ? 'bg-white' : 'bg-[var(--color-primary)]'}`} />
                   )}
@@ -257,15 +259,17 @@ export const ContactVerificationPage: React.FC<ContactVerificationPageProps> = (
         {/* Left Column (5 Cols): Acoustic Target Optical Crop */}
         <div className="lg:col-span-5 bg-[var(--color-surface)] rounded-[24px] border border-[var(--color-border)] p-6 shadow-soft space-y-5 flex flex-col justify-between">
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
-              <div>
+            <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-3 min-w-0">
+              <div className="min-w-0">
                 <span className="section-label block">Optical Backscatter Crop</span>
-                <h3 className="text-base font-bold text-[var(--color-text)] font-display mt-0.5 flex items-center gap-1.5">
-                  <Scan className="w-4 h-4 text-[var(--color-primary)]" />
-                  Acoustic Signature Crop ({activeContact.contact_id})
+                <h3 className="text-base font-bold text-[var(--color-text)] font-display mt-0.5 flex items-center gap-1.5 min-w-0">
+                  <Scan className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+                  <span className="truncate max-w-[240px]" title={`Acoustic Signature Crop (${activeContact.contact_id})`}>
+                    Acoustic Signature Crop ({activeContact.contact_id})
+                  </span>
                 </h3>
               </div>
-              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)]">
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] shrink-0">
                 {bboxWidth} × {bboxHeight} px
               </span>
             </div>
@@ -287,7 +291,7 @@ export const ContactVerificationPage: React.FC<ContactVerificationPageProps> = (
 
               {/* Targeting Reticle & ID Tag Overlay */}
               <div className="absolute inset-5 border-2 border-cyan-400/90 rounded-sm pointer-events-none shadow-2xl">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[var(--color-primary)] text-white font-mono font-bold text-[10px] rounded-full shadow-md whitespace-nowrap">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[var(--color-primary)] text-white font-mono font-bold text-[10px] rounded-full shadow-md whitespace-nowrap max-w-[90%] truncate" title={`${activeContact.contact_id} • ${Math.round(activeContact.confidence * 100)}% CONF`}>
                   {activeContact.contact_id} • {Math.round(activeContact.confidence * 100)}% CONF
                 </div>
                 {/* Crosshairs */}

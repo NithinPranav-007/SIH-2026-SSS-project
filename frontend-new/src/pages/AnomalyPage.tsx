@@ -125,11 +125,14 @@ export const AnomalyPage: React.FC<AnomalyPageProps> = ({ onSelectContact }) => 
               className="p-5 rounded-2xl bg-white border border-[var(--color-border)] shadow-sm hover:shadow-md hover:border-purple-300 transition cursor-pointer flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-gray-100 text-gray-800">
+                <div className="flex items-center justify-between mb-3 gap-2 min-w-0">
+                  <span 
+                    className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-gray-100 text-gray-800 truncate max-w-[150px] inline-block"
+                    title={anomaly.contact_id}
+                  >
                     {anomaly.contact_id}
                   </span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 shrink-0">
                     Novelty: {anomaly.novelty_score ?? 55}/100
                   </span>
                 </div>

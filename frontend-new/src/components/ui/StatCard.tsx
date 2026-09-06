@@ -52,10 +52,10 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       {/* Footer / Trend Tracker */}
-      <div className="relative z-10 mt-5 flex items-center justify-between pt-3.5 border-t border-[#f2f2f2] text-xs">
+      <div className="relative z-10 mt-5 flex items-center justify-between pt-3.5 border-t border-[#f2f2f2] text-xs gap-2 min-w-0">
         {trend ? (
           <span
-            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors shrink-0 ${
               trend.isNeutral
                 ? 'bg-slate-100 text-slate-700'
                 : trend.isUp
@@ -66,11 +66,11 @@ export const StatCard: React.FC<StatCardProps> = ({
             {trend.value}
           </span>
         ) : (
-          <span className="text-xs text-[#8e8e93] font-medium">Calibrated</span>
+          <span className="text-xs text-[#8e8e93] font-medium shrink-0">Calibrated</span>
         )}
 
         {subtext && (
-          <span className="text-xs font-medium text-[#8e8e93] truncate max-w-[180px]" title={subtext}>
+          <span className="text-xs font-medium text-[#8e8e93] truncate max-w-[170px] text-right min-w-0" title={subtext}>
             {subtext}
           </span>
         )}

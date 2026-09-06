@@ -130,11 +130,14 @@ export const AnalystPage: React.FC<AnalystPageProps> = ({ onSelectContact }) => 
                 className="p-5 rounded-2xl bg-white border border-[var(--color-border)] shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono text-xs font-bold text-gray-800 px-2 py-0.5 rounded bg-gray-100">
+                  <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
+                    <span 
+                      className="font-mono text-xs font-bold text-gray-800 px-2 py-0.5 rounded bg-gray-100 truncate max-w-[150px] inline-block"
+                      title={c.contact_id}
+                    >
                       {c.contact_id}
                     </span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${
                       c.risk_level === 'CRITICAL' ? 'bg-red-100 text-red-800' :
                       c.risk_level === 'HIGH' ? 'bg-orange-100 text-orange-800' :
                       'bg-blue-100 text-blue-800'

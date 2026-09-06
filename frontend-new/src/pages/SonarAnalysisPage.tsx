@@ -116,18 +116,20 @@ export const SonarAnalysisPage: React.FC<SonarAnalysisPageProps> = ({
 
         {/* Quick Actions */}
         <div className="flex items-center gap-3">
-          <div className="text-xs font-semibold px-4 py-2 rounded-full bg-[#fcfcfc] border border-[#e6e6e6] text-[#1f1f1f] flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{survey ? survey.filename : 'No Swath Active'}</span>
+          <div className="text-xs font-semibold px-4 py-2 rounded-full bg-[#fcfcfc] border border-[#e6e6e6] text-[#1f1f1f] flex items-center gap-2 max-w-[280px]">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="truncate" title={survey ? survey.filename : 'No Swath Active'}>
+              {survey ? survey.filename : 'No Swath Active'}
+            </span>
           </div>
 
           {activeContact && (
             <button
               onClick={() => onVerifyContact?.(activeContact)}
-              className="px-5 py-2.5 rounded-full bg-[#ff383c] hover:bg-[#dc143c] text-white font-semibold text-xs transition-all duration-200 shadow-tactile flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-full bg-[#ff383c] hover:bg-[#dc143c] text-white font-semibold text-xs transition-all duration-200 shadow-tactile flex items-center gap-2 cursor-pointer shrink-0"
             >
-              <span>Verify Target {activeContact.contact_id}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span className="truncate max-w-[220px]">Verify Target {activeContact.contact_id}</span>
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </button>
           )}
         </div>
@@ -185,16 +187,16 @@ export const SonarAnalysisPage: React.FC<SonarAnalysisPageProps> = ({
 
             <div className="space-y-3.5 text-xs">
               <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <span className="text-[#8e8e93] font-medium">Swath SNR Quality:</span>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-[#8e8e93]">Swath SNR Quality:</span>
                   <span className="font-bold text-emerald-600">
-                    {survey ? `${Math.round(survey.data_quality * 100)}%` : '--'}
+                    {survey ? `${survey.data_quality > 1 ? Math.round(survey.data_quality) : Math.round(survey.data_quality * 100)}%` : '--'}
                   </span>
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-emerald-500 rounded-full" 
-                    style={{ width: `${survey ? Math.round(survey.data_quality * 100) : 0}%` }}
+                    className="h-full bg-emerald-500 rounded-full transition-all" 
+                    style={{ width: `${survey ? Math.min(100, Math.max(0, survey.data_quality > 1 ? Math.round(survey.data_quality) : Math.round(survey.data_quality * 100))) : 0}%` }}
                   />
                 </div>
               </div>
@@ -450,7 +452,7 @@ export const SonarAnalysisPage: React.FC<SonarAnalysisPageProps> = ({
                 No anomaly detections in active swath.
               </div>
             ) : (
-              displayedContacts.map((contact) => {
+              displayedContacts.map((contact, idx) => {
                 const isSelected = activeContact?.contact_id === contact.contact_id;
                 const isHigh = contact.priority === 'HIGH';
 
@@ -458,34 +460,37 @@ export const SonarAnalysisPage: React.FC<SonarAnalysisPageProps> = ({
                   <div
                     key={contact.contact_id}
                     onClick={() => onSelectContact(contact)}
-                    className={`p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer flex items-center justify-between ${
+                    className={`p-3 rounded-2xl border transition-all duration-200 cursor-pointer flex items-center justify-between gap-2.5 min-w-0 ${
                       isSelected
                         ? 'bg-[#ff383c]/5 border-[#ff383c] shadow-sm'
                         : 'bg-[#fcfcfc] border-[#e6e6e6] hover:bg-white hover:border-slate-300'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      {/* ID Bucket */}
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl font-mono font-bold text-xs border transition-colors ${
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      {/* Sequence Badge Bucket */}
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono font-bold text-xs border transition-colors ${
                         isSelected 
                           ? 'bg-[#ff383c] text-white border-[#ff383c]' 
                           : 'bg-white text-[#1f1f1f] border-[#e6e6e6]'
                       }`}>
-                        {contact.contact_id}
+                        #{String(idx + 1).padStart(2, '0')}
                       </div>
 
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-[#1f1f1f] text-xs font-mono">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span 
+                            className="font-bold text-[#1f1f1f] text-xs font-mono truncate max-w-[130px]"
+                            title={contact.contact_id}
+                          >
                             {contact.contact_id}
                           </span>
-                          <span className={`text-[9px] font-bold px-2 py-0.2 rounded-full font-sans ${
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full font-sans shrink-0 ${
                             isHigh ? 'bg-[#ff383c]/10 text-[#ff383c]' : 'bg-amber-50 text-amber-700'
                           }`}>
                             {contact.priority}
                           </span>
                         </div>
-                        <div className="text-[11px] text-[#8e8e93] mt-0.5 font-sans">
+                        <div className="text-[11px] text-[#8e8e93] mt-0.5 font-sans truncate">
                           Confidence: <strong className="text-[#1f1f1f]">{Math.round(contact.confidence * 100)}%</strong>
                         </div>
                       </div>
@@ -497,7 +502,7 @@ export const SonarAnalysisPage: React.FC<SonarAnalysisPageProps> = ({
                         onSelectContact(contact);
                         onVerifyContact?.(contact);
                       }}
-                      className="p-1.5 rounded-full bg-white hover:bg-[#ff383c] hover:text-white text-[#8e8e93] border border-[#e6e6e6] transition-all cursor-pointer"
+                      className="p-1.5 rounded-full bg-white hover:bg-[#ff383c] hover:text-white text-[#8e8e93] border border-[#e6e6e6] transition-all cursor-pointer shrink-0"
                       title="Open in Contact Verification Workflow"
                     >
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -514,13 +519,13 @@ export const SonarAnalysisPage: React.FC<SonarAnalysisPageProps> = ({
       {/* 3. Bottom Acoustic Physics Context Verification Bar */}
       {activeContact && (
         <section className="bg-white rounded-[24px] border border-[#e6e6e6] p-5 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ff383c]/10 text-[#ff383c]">
+          <div className="flex items-center gap-3 shrink-0 min-w-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ff383c]/10 text-[#ff383c]">
               <Scan className="w-5 h-5" />
             </div>
-            <div>
+            <div className="min-w-0">
               <span className="section-label block">Physics Context Engine</span>
-              <h4 className="text-base font-extrabold text-[#1f1f1f] font-display">
+              <h4 className="text-base font-extrabold text-[#1f1f1f] font-display truncate max-w-[280px]" title={`Candidate ${activeContact.contact_id} Diagnostics`}>
                 Candidate {activeContact.contact_id} Diagnostics
               </h4>
             </div>

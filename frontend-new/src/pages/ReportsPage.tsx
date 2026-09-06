@@ -264,7 +264,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({ survey, contacts }) =>
 
                   return (
                     <tr key={c.contact_id} className="hover:bg-[var(--color-surface-2)] transition-colors">
-                      <td className="py-3.5 pl-2 font-mono font-bold text-[var(--color-text)]">{c.contact_id}</td>
+                      <td className="py-3.5 pl-2 font-mono font-bold text-[var(--color-text)] whitespace-nowrap">{c.contact_id}</td>
                       <td className="py-3.5 font-mono text-[var(--color-text-2)] text-[10px]">{c.class_name.replace(/_/g, ' ')}</td>
                       <td className="py-3.5">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-sans ${

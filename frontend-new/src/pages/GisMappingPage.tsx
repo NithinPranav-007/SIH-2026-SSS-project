@@ -142,15 +142,17 @@ export const GisMappingPage: React.FC<GisMappingPageProps> = ({
         <div className="lg:col-span-4 bg-white rounded-[24px] border border-[#e6e6e6] p-6 shadow-soft space-y-5 flex flex-col justify-between">
           {activeContact ? (
             <div className="space-y-5">
-              <div className="border-b border-[#f2f2f2] pb-3 flex items-center justify-between">
-                <div>
+              <div className="border-b border-[#f2f2f2] pb-3 flex items-center justify-between gap-2 min-w-0">
+                <div className="min-w-0 flex-1">
                   <span className="section-label block">Target Spatial Pin</span>
-                  <h3 className="text-base font-bold text-[#1f1f1f] font-display mt-0.5 flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-[#ff383c]" />
-                    Candidate {activeContact.contact_id}
+                  <h3 className="text-base font-bold text-[#1f1f1f] font-display mt-0.5 flex items-center gap-1.5 min-w-0">
+                    <MapPin className="w-4 h-4 text-[#ff383c] shrink-0" />
+                    <span className="truncate max-w-[200px]" title={`Candidate ${activeContact.contact_id}`}>
+                      Candidate {activeContact.contact_id}
+                    </span>
                   </h3>
                 </div>
-                <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                <span className={`text-xs font-bold px-3 py-1 rounded-full shrink-0 ${
                   activeContact.priority === 'HIGH' ? 'bg-[#ff383c]/10 text-[#ff383c]' : 'bg-amber-50 text-amber-700'
                 }`}>
                   {activeContact.priority} PRIORITY
