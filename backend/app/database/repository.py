@@ -12,11 +12,27 @@ from backend.app.schemas.contact import Contact, BoundingBox
 
 def to_canonical_contact(model: ContactModel) -> Contact:
     """Transforms a database ContactModel into the Canonical Contact Pydantic schema."""
+    measurements = None
+    if model.measurements:
+        try:
+            measurements = model.measurements if isinstance(model.measurements, dict) else {}
+        except Exception:
+            measurements = None
+
+    explanation = None
+    if model.explanation:
+        try:
+            explanation = model.explanation if isinstance(model.explanation, dict) else {}
+        except Exception:
+            explanation = None
+
     return Contact(
         contact_id=model.contact_id,
         survey_id=model.survey_id,
         class_name=model.class_name,
         confidence=model.confidence,
+        model_score=model.confidence,
+        calibrated_confidence=model.calibrated_confidence,
         bbox=BoundingBox(
             x1=model.bbox_x1,
             y1=model.bbox_y1,
@@ -32,7 +48,23 @@ def to_canonical_contact(model: ContactModel) -> Contact:
         localization_status=model.localization_status,
         review_status=model.review_status,
         review_note=model.review_note,
-        model_version=model.model_version
+        model_version=model.model_version,
+        pipeline_version=model.pipeline_version,
+        classifier_confidence=model.classifier_confidence,
+        classifier_label=model.classifier_label,
+        classifier_method=model.classifier_method,
+        acoustic_probability=model.acoustic_probability,
+        evidence_score=model.evidence_score,
+        track_id=model.track_id,
+        track_observations=model.track_observations,
+        track_confidence=model.track_confidence,
+        track_stability=model.track_stability,
+        novelty_score=model.novelty_score,
+        anomaly_type=model.anomaly_type,
+        risk_score=model.risk_score,
+        risk_level=model.risk_level,
+        measurements=measurements,
+        explanation=explanation
     )
 
 
@@ -83,6 +115,9 @@ class ContactRepository:
     def save_contacts(self, contacts: List[Contact]) -> List[Contact]:
         """Saves or updates a batch of canonical contacts."""
         for c in contacts:
+            meas_dict = c.measurements.model_dump() if hasattr(c.measurements, "model_dump") else (c.measurements if isinstance(c.measurements, dict) else None)
+            expl_dict = c.explanation.model_dump() if hasattr(c.explanation, "model_dump") else (c.explanation if isinstance(c.explanation, dict) else None)
+
             model = ContactModel(
                 contact_id=c.contact_id,
                 survey_id=c.survey_id,
@@ -101,7 +136,24 @@ class ContactRepository:
                 localization_status=c.localization_status,
                 review_status=c.review_status,
                 review_note=c.review_note,
-                model_version=c.model_version
+                model_version=c.model_version,
+                pipeline_version=c.pipeline_version,
+                classifier_confidence=c.classifier_confidence,
+                classifier_label=c.classifier_label,
+                classifier_method=c.classifier_method,
+                acoustic_probability=c.acoustic_probability,
+                evidence_score=c.evidence_score,
+                calibrated_confidence=c.calibrated_confidence,
+                track_id=c.track_id,
+                track_observations=c.track_observations,
+                track_confidence=c.track_confidence,
+                track_stability=c.track_stability,
+                novelty_score=c.novelty_score,
+                anomaly_type=c.anomaly_type,
+                risk_score=c.risk_score,
+                risk_level=c.risk_level,
+                measurements=meas_dict,
+                explanation=expl_dict
             )
             self.db.merge(model)
         self.db.commit()
@@ -167,3 +219,20 @@ class ContactRepository:
             )
         records = query.all()
         return [to_canonical_contact(r) for r in records]
+
+    def get_contact_model(self, contact_id: str) -> Optional[ContactModel]:
+        """Fetch raw ORM model for sub-resource inspections."""
+        return self.db.query(ContactModel).filter(ContactModel.contact_id == contact_id).first()
+
+    def get_unknown_anomalies(self, min_novelty: float = 40.0, limit: int = 100) -> List[Contact]:
+        """Fetch high-novelty acoustic anomalies (UNKNOWN_ANOMALY candidates)."""
+        query = (
+            self.db.query(ContactModel)
+            .filter(
+                (ContactModel.anomaly_type == "UNKNOWN_ANOMALY") |
+                (ContactModel.novelty_score >= min_novelty)
+            )
+            .order_by(ContactModel.novelty_score.desc())
+            .limit(limit)
+        )
+        return [to_canonical_contact(r) for r in query.all()]

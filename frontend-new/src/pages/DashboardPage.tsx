@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
 import { Contact, SurveyUploadResponse } from '../types/detection';
 import { StatCard } from '../components/ui/StatCard';
+import { SkeletonStatCard } from '../components/ui/SkeletonCard';
 import { 
   Layers, 
   Scan, 
@@ -23,7 +24,7 @@ import {
 interface DashboardPageProps {
   survey: SurveyUploadResponse | null;
   contacts: Contact[];
-  onSelectScreen: (screen: 'dashboard' | 'sonar-analysis' | 'contact-verification' | 'gis-mapping' | 'ai-pipeline' | 'reports') => void;
+  onSelectScreen: (screen: any) => void;
   onSelectContact: (contact: Contact) => void;
   onCustomUploadClick?: () => void;
 }
@@ -68,6 +69,22 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     { code: 'L06', label: 'L06 (Deep)', count: 2, height: 18 },
     { code: 'L07', label: 'L07 (Shoal)', count: 5, height: 42 },
   ];
+
+  // Show skeleton stat cards while initial API stats are loading
+  if (loading && contacts.length === 0) {
+    return (
+      <div className="p-8 lg:p-10 max-w-[1500px] mx-auto space-y-8 font-sans">
+        <div className="skeleton h-40 rounded-[24px]" />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonStatCard key={i} />)}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7 skeleton h-64 rounded-[24px]" />
+          <div className="lg:col-span-5 skeleton h-64 rounded-[24px]" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 lg:p-10 max-w-[1500px] mx-auto space-y-8 font-sans">

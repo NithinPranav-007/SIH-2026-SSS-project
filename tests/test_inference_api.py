@@ -26,6 +26,10 @@ class TestInferenceAPI:
         return encoded.tobytes()
 
     def test_detect_endpoint_valid_image(self, client, sample_png_bytes):
+        from backend.app.core.config import settings
+        import os
+        if not os.path.exists(settings.MODEL_PATH):
+            pytest.skip(f"DRISHTI weights not downloaded at {settings.MODEL_PATH}")
         response = client.post(
             "/api/inference/detect",
             files={"file": ("test_sonar.png", io.BytesIO(sample_png_bytes), "image/png")}

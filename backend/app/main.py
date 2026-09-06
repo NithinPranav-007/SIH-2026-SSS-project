@@ -20,6 +20,11 @@ from backend.app.api.demo import router as demo_router
 from backend.app.api.dashboard import router as dashboard_router
 from backend.app.api.pipeline import router as pipeline_router
 from backend.app.api.inference import router as inference_router
+from backend.app.api.ml import router as ml_router
+from backend.app.api.anomalies import router as anomalies_router
+from backend.app.api.active_learning import router as active_learning_router
+from backend.app.api.analyst import router as analyst_router
+from backend.app.api.resurvey import router as resurvey_router
 
 from contextlib import asynccontextmanager
 
@@ -63,6 +68,11 @@ app.include_router(demo_router)
 app.include_router(dashboard_router)
 app.include_router(pipeline_router)
 app.include_router(inference_router)
+app.include_router(ml_router)
+app.include_router(anomalies_router)
+app.include_router(active_learning_router)
+app.include_router(analyst_router)
+app.include_router(resurvey_router)
 
 # Mount static demo/data directories if they exist
 os.makedirs("data/raw", exist_ok=True)

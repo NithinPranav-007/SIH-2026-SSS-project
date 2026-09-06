@@ -9,7 +9,11 @@ export type ActiveScreen =
   | 'contact-verification' 
   | 'gis-mapping' 
   | 'ai-pipeline' 
-  | 'reports';
+  | 'reports'
+  | 'anomalies'
+  | 'ml-monitor'
+  | 'active-learning'
+  | 'analyst';
 
 interface MainLayoutProps {
   children: React.ReactNode;

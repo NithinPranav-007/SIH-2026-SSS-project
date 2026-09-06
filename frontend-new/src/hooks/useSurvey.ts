@@ -72,7 +72,9 @@ export function useSurvey() {
     setLoading(true);
     setError(null);
     try {
-      const data = await apiService.loadDemoSample(sampleId);
+      // Always use the safe preview endpoint — no DRISHTI model weights needed.
+      // Falls back with a clear message if the demo image file is missing from disk.
+      const data = await apiService.previewDemoSample(sampleId);
       setSurvey(data.survey);
       setContacts(data.contacts);
       if (data.contacts && data.contacts.length > 0) {
@@ -86,10 +88,13 @@ export function useSurvey() {
         const track = await apiService.getSurveyTrack(data.survey.survey_id);
         setNavTrack(track);
       } catch (e) {
-        // Nav track or summary might be partial
+        // Nav track or summary might be partial — non-fatal
       }
     } catch (err: any) {
-      setError(err.response?.data?.detail || `Failed to load demo sample '${sampleId}'.`);
+      setError(
+        err.response?.data?.detail ||
+        `Demo sample '${sampleId}' could not be loaded. Ensure demo images are present in data/demo/sonar/.`
+      );
     } finally {
       setLoading(false);
     }

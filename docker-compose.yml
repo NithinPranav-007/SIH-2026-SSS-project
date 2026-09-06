@@ -1,5 +1,3 @@
-﻿version: "3.8"
-
 # ============================================================
 # SONAR-INTEL Docker Compose
 # ============================================================
@@ -17,7 +15,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-sonar_intel}
       POSTGRES_USER: ${POSTGRES_USER:-sonar_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sonar_password}
     ports:
       - "${POSTGRES_PORT:-5433}:5432"
     volumes:
@@ -39,9 +37,8 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     container_name: sonar_intel_backend
-    env_file: backend/.env
     environment:
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-sonar_user}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB:-sonar_intel}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-sonar_user}:${POSTGRES_PASSWORD:-sonar_password}@postgis:5432/${POSTGRES_DB:-sonar_intel}
       ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
     ports:
       - "8000:8000"

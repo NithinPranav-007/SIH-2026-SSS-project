@@ -1,4 +1,4 @@
-﻿# Sonar-Intel
+# Sonar-Intel
 
 [![CI](https://github.com/NithinPranav-007/SIH-2026-SSS-project/actions/workflows/ci.yml/badge.svg)](https://github.com/NithinPranav-007/SIH-2026-SSS-project/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://python.org)
@@ -28,17 +28,24 @@ Side-scan sonar surveys generate thousands of waterfall images per mission. Manu
 ## Key Features
 
 - **DRISHTI Preprocessing Pipeline** — Lee speckle filter (MMSE) + CLAHE contrast enhancement, versioned and deterministic
+- **10-Indicator Acoustic Quality Engine** — Assesses dynamic range, blur acutance, SNR, Weber contrast, shadow visibility, nadir interference, dropout, saturation, and speckle noise
 - **Tiled YOLOv8s Inference** — 640×640 overlapping tile grid with 20% stride, border NMS deduplication
-- **Multi-class Detection** — Shipwrecks, submarine pipelines, ghost nets, mine cylinders
-- **Acoustic Context Scoring** — Shadow deficit analysis, local highlight contrast, geometric regularity
-- **Composite Priority Scoring** — Weighted triage score (HIGH / MEDIUM / LOW) based on model confidence + acoustic evidence + localization quality
-- **Geolocation Service** — Orthogonal projection from towfish ping/heading navigation logs to WGS-84 coordinates
+- **Multi-Ping Persistence Tracking** — IoU & cross-track spatial association across consecutive waterfall pings (`track_id`, ping count, stability)
+- **Second-Stage Crop Classifier** — Calibrated acoustic rule fusion reducing seabed reverberation and clutter false alarms
+- **14-Feature Learned Acoustic Fusion** — Integrates physics and geometric indicators with temperature-scaled confidence calibration
+- **Physical Target Dimensioning** — Derives physical `length_m`, `width_m`, `area_m2`, `aspect_ratio`, and acoustic shadow length with confidence and methodology
+- **37-Dimensional Feature Embeddings** — Offline L2-normalized vector representations enabling fast cosine similarity contact search
+- **Unknown Acoustic Anomaly Discovery** — Mahalanobis distance from catalogued prototype distributions surfaces uncatalogued targets (`novelty_score` 0–100)
+- **Calibrated Operational Risk Scoring** — Transparent hazard tiers (CRITICAL &ge; 80, HIGH &ge; 60, MEDIUM &ge; 35, LOW < 35) with domain safety rules
+- **Explainability Engine (XAI)** — Synthesizes positive acoustic evidence and negative caveats for hydrographer review
+- **Active Learning Feedback Loop** — Operator review judgments captured to curate retraining sets with manual YOLO dataset export
+- **AI Sonar Analyst Engine** — 100% offline, deterministic natural language query parser for instant operational contact filtering
 - **Human-in-the-loop Triage** — Confirm / False Positive / Uncertain workflow with auditable review trail
 - **GeoJSON & CSV Export** — RFC 7946 compliant spatial export for GIS tools
 - **Interactive Operations Dashboard** — React + TypeScript frontend with MapLibre GL nautical charting
 - **SQLite → PostGIS Fallback** — Runs fully offline with local SQLite; scales to PostGIS for production
-- **Curated Demo Benchmarks** — Four real sonar swaths included for immediate out-of-box demonstration
-- **Full Test Suite** — Pytest unit tests for preprocessing, scoring, contact transformation, GeoJSON export, and repository layer
+- **Curated Demo Benchmarks** — Real sonar swaths included for immediate out-of-box demonstration
+- **Full Test Suite (71 Tests)** — 100% passing test coverage across quality, fusion, tracking, anomaly detection, risk, XAI, and API layers
 
 ---
 

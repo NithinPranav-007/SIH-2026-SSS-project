@@ -9,9 +9,12 @@ This is the single authoritative contract shared between:
 
 Strict separation between model_score, calibrated_confidence, data_quality,
 acoustic_context, and operational priority.
+
+Phase 1 additions: all new fields are Optional with None defaults.
+Zero breaking changes to existing callers.
 """
 
-from typing import Optional, Literal
+from typing import Optional, Literal, Dict, Any, List
 from pydantic import BaseModel, Field
 
 
@@ -22,46 +25,125 @@ class BoundingBox(BaseModel):
     y2: int = Field(..., description="Bottom-right Y coordinate in parent image")
 
 
+class MeasurementValue(BaseModel):
+    """A single physical measurement with full scientific provenance."""
+    value: Optional[float] = Field(default=None, description="Measurement value")
+    unit: str = Field(default="m", description="Physical unit (m, m2, deg, px)")
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0, description="Measurement confidence [0-1]")
+    method: str = Field(default="NOT_ESTIMATED", description="Derivation method or NOT_ESTIMATED")
+    is_estimated: bool = Field(default=False, description="False when value cannot be reliably derived")
+
+
+class ContactMeasurements(BaseModel):
+    """Physical target dimension estimates. Every field includes confidence + method."""
+    length: MeasurementValue = Field(default_factory=lambda: MeasurementValue(method="NOT_ESTIMATED"))
+    width: MeasurementValue = Field(default_factory=lambda: MeasurementValue(method="NOT_ESTIMATED"))
+    area: MeasurementValue = Field(default_factory=lambda: MeasurementValue(unit="m2", method="NOT_ESTIMATED"))
+    aspect_ratio: MeasurementValue = Field(default_factory=lambda: MeasurementValue(unit="ratio", method="NOT_ESTIMATED"))
+    orientation: MeasurementValue = Field(default_factory=lambda: MeasurementValue(unit="deg", method="NOT_ESTIMATED"))
+    shadow_length: MeasurementValue = Field(default_factory=lambda: MeasurementValue(method="NOT_ESTIMATED"))
+    distance_from_nadir: MeasurementValue = Field(default_factory=lambda: MeasurementValue(method="NOT_ESTIMATED"))
+
+
+class ContactExplanation(BaseModel):
+    """
+    Structured explainability evidence for a detection.
+    
+    SCIENTIFIC RULE: Only report evidence that was actually computed.
+    Never fabricate reasons. If a module was unavailable, omit its contribution.
+    """
+    detector_confidence: Optional[float] = None
+    acoustic_probability: Optional[float] = None
+    classifier_confidence: Optional[float] = None
+    track_persistence_score: Optional[float] = None     # fraction of max observed track
+    novelty_score: Optional[float] = None
+    sonar_quality_score: Optional[float] = None
+    risk_score: Optional[float] = None
+
+    positive_evidence: List[str] = Field(default_factory=list)
+    negative_evidence: List[str] = Field(default_factory=list)
+
+    overall_confidence_label: str = "UNASSESSED"        # HIGH CONFIDENCE | MODERATE | LOW | UNCERTAIN
+    method: str = "evidence_fusion_v1"
+    is_complete: bool = False                           # True when all modules contributed
+
+
 class Contact(BaseModel):
     contact_id: str = Field(..., description="Unique contact identifier, e.g. C001")
     survey_id: str = Field(..., description="Foreign key reference to parent survey")
     class_name: str = Field(default="artificial_anomaly", description="Target classification")
     confidence: float = Field(..., ge=0.0, le=1.0, description="General confidence value")
-    
-    # Explicit confidence separation
+
+    # Explicit confidence separation (original)
     model_score: Optional[float] = Field(default=None, description="Raw YOLO detector confidence score")
-    calibrated_confidence: Optional[float] = Field(default=None, description="Post-calibration probability (if calibrated)")
-    
+    calibrated_confidence: Optional[float] = Field(default=None, description="Post-calibration probability")
+
     bbox: BoundingBox = Field(..., description="Pixel bounding box coordinates")
-    
-    # Telemetry and ping linkage
-    source_tile: Optional[str] = Field(default=None, description="Source tile identifier (e.g. TILE_001)")
+
+    # Telemetry and ping linkage (original)
+    source_tile: Optional[str] = Field(default=None, description="Source tile identifier")
     source_ping: Optional[int] = Field(default=None, description="Acoustic ping line index")
-    detection_timestamp: Optional[str] = Field(default=None, description="UTC ISO timestamp of detection")
-    
-    # Acoustic metrics
+    detection_timestamp: Optional[str] = Field(default=None, description="UTC ISO timestamp")
+
+    # Acoustic metrics (original)
     data_quality: float = Field(default=1.0, ge=0.0, le=1.0, description="Acoustic swath signal quality")
     shadow_evidence: float = Field(default=0.0, ge=0.0, le=1.0, description="Acoustic shadow deficit ratio")
     context_score: float = Field(default=0.0, ge=0.0, le=1.0, description="Composite acoustic physics score")
-    
+
     priority: Literal["HIGH", "MEDIUM", "LOW"] = Field(default="MEDIUM", description="Operational triage priority")
-    
+
     latitude: Optional[float] = Field(default=None, description="WGS84 estimated latitude")
     longitude: Optional[float] = Field(default=None, description="WGS84 estimated longitude")
     location_uncertainty: Optional[float] = Field(default=None, description="Geospatial uncertainty radius in meters")
-    
+
     localization_status: Literal["ESTIMATED", "VERIFIED", "UNCERTAIN", "UNAVAILABLE"] = Field(
-        default="UNAVAILABLE",
-        description="Reliability status of geospatial coordinates"
+        default="UNAVAILABLE", description="Reliability status of geospatial coordinates"
     )
-    
+
     review_status: Literal["AI_CANDIDATE", "CONFIRMED", "FALSE_POSITIVE", "UNCERTAIN"] = Field(
-        default="AI_CANDIDATE",
-        description="Human-in-the-loop triage decision"
+        default="AI_CANDIDATE", description="Human-in-the-loop triage decision"
     )
     review_note: Optional[str] = Field(default=None, description="Human reviewer notes")
     model_name: Optional[str] = Field(default="DRISHTI-YOLOv8s", description="Detector model name")
     model_version: str = Field(default="baseline-v1", description="Model version provenance")
+
+    # ── Phase 1 ML Intelligence additions (all Optional, all None) ────────
+
+    # Model provenance
+    pipeline_version: Optional[str] = Field(default=None, description="Full model stack hash ID")
+
+    # Second-stage classifier
+    classifier_confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    classifier_label: Optional[str] = Field(default=None, description="REAL_TARGET | SONAR_CLUTTER")
+    classifier_method: Optional[str] = Field(default=None)
+
+    # Learned acoustic fusion
+    acoustic_probability: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    evidence_score: Optional[float] = Field(default=None)
+
+    # Multi-ping tracking
+    track_id: Optional[str] = Field(default=None, description="Track ID if contact is part of a multi-ping track")
+    track_observations: Optional[int] = Field(default=None, description="Number of pings this contact spans")
+    track_confidence: Optional[float] = Field(default=None)
+    track_stability: Optional[float] = Field(default=None)
+
+    # Unknown anomaly detection
+    novelty_score: Optional[float] = Field(default=None, ge=0.0, le=100.0, description="Novelty score 0-100 (0=known, 100=highly novel)")
+    anomaly_type: Optional[str] = Field(default=None, description="KNOWN_OBJECT | UNKNOWN_ANOMALY")
+
+    # Risk intelligence
+    risk_score: Optional[float] = Field(default=None, ge=0.0, le=100.0, description="Risk score 0-100")
+    risk_level: Optional[Literal["CRITICAL", "HIGH", "MEDIUM", "LOW"]] = Field(default=None)
+    risk_label: Optional[str] = Field(default=None, description="Scientifically defensible risk description")
+
+    # Structured measurements
+    measurements: Optional[ContactMeasurements] = Field(default=None)
+
+    # Explainability
+    explanation: Optional[ContactExplanation] = Field(default=None)
+
+    # Similarity search (populated by API layer, not stored)
+    similar_contacts: Optional[List[Dict[str, Any]]] = Field(default=None, exclude=True)
 
     model_config = {
         "from_attributes": True,

@@ -17,8 +17,16 @@ from backend.app.core.config import settings
 
 router = APIRouter(prefix="/api/inference", tags=["Inference"])
 
-# Singleton detector instance for API endpoints
-detector = DrishtiDetector()
+# Singleton detector instance for API endpoints (lazily loaded)
+_detector: Optional[DrishtiDetector] = None
+
+
+def get_detector() -> DrishtiDetector:
+    """Lazily initialize DrishtiDetector on first use."""
+    global _detector
+    if _detector is None:
+        _detector = DrishtiDetector()
+    return _detector
 
 
 class DetectionItem(BaseModel):
@@ -72,14 +80,15 @@ async def detect_sonar_anomalies(
     h, w = image.shape[:2]
 
     # 4. Set optional override threshold
-    orig_conf = detector.confidence_threshold
+    d = get_detector()
+    orig_conf = d.confidence_threshold
     if confidence_threshold is not None:
-        detector.confidence_threshold = confidence_threshold
+        d.confidence_threshold = confidence_threshold
 
     try:
-        raw_detections = detector.predict(image)
+        raw_detections = d.predict(image)
     finally:
-        detector.confidence_threshold = orig_conf
+        d.confidence_threshold = orig_conf
 
     # 5. Separate eligible detections from product-filtered detections (e.g. crab_pot)
     eligible_detections: List[DetectionItem] = []
@@ -97,8 +106,8 @@ async def detect_sonar_anomalies(
         ))
 
     return InferenceResponse(
-        model_name=detector.model_name,
-        model_version=detector.model_version,
+        model_name=get_detector().model_name,
+        model_version=get_detector().model_version,
         image=ImageMetadata(width=w, height=h),
         detections=eligible_detections,
         filtered_detections_count=filtered_count

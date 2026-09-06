@@ -17,7 +17,15 @@ from backend.app.schemas.survey import AnalysisRequest, AnalysisResponse
 from backend.app.services.inference_service import InferenceService
 
 router = APIRouter(prefix="/api/surveys", tags=["Analysis"])
-inference_service = InferenceService()
+_inference_service: Optional[InferenceService] = None
+
+
+def get_inference_service() -> InferenceService:
+    """Lazily initialize InferenceService on first use."""
+    global _inference_service
+    if _inference_service is None:
+        _inference_service = InferenceService()
+    return _inference_service
 
 
 @router.post("/{survey_id}/analyze", response_model=AnalysisResponse)
@@ -39,7 +47,7 @@ async def analyze_survey(
     conf_thresh = request.confidence_threshold if request else 0.25
 
     try:
-        contacts = inference_service.run_survey_analysis(
+        contacts = get_inference_service().run_survey_analysis(
             survey_id=survey.survey_id,
             raw_image_path=survey.raw_image_path,
             nav_file_path=survey.nav_file_path,

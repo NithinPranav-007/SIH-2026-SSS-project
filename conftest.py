@@ -1,4 +1,4 @@
-﻿"""
+"""
 Root conftest.py for SONAR-INTEL test suite.
 
 Sets up:
@@ -20,11 +20,15 @@ def test_db_setup():
     """
     Creates the test database schema once per session and tears it down after.
     """
-    from backend.app.database.connection import Base, engine
-    Base.metadata.create_all(bind=engine)
+    from backend.app.database.connection import Base, engine, init_db
+    if os.path.exists("test_sonar_intel.db"):
+        try:
+            os.remove("test_sonar_intel.db")
+        except OSError:
+            pass
+    init_db()
     yield
     Base.metadata.drop_all(bind=engine)
-    # Clean up the test db file if it was created on disk
     if os.path.exists("test_sonar_intel.db"):
         try:
             os.remove("test_sonar_intel.db")

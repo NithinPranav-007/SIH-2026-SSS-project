@@ -32,6 +32,23 @@ export interface Contact {
   review_status: ReviewStatus;
   review_note: string | null;
   model_version: string;
+  // ML Intelligence Upgrade
+  calibrated_confidence?: number | null;
+  pipeline_version?: string | null;
+  classifier_confidence?: number | null;
+  classifier_label?: string | null;
+  acoustic_probability?: number | null;
+  track_id?: string | null;
+  track_observations?: number | null;
+  track_confidence?: number | null;
+  track_stability?: number | null;
+  novelty_score?: number | null;
+  anomaly_type?: string | null;
+  risk_score?: number | null;
+  risk_level?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | null;
+  risk_label?: string | null;
+  measurements?: any;
+  explanation?: any;
 }
 
 export interface SurveyUploadResponse {

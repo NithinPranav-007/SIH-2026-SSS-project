@@ -249,12 +249,15 @@ export const AiPipelinePage: React.FC = () => {
           </div>
 
           <div className="space-y-2.5 text-xs font-sans">
-            {[
-              { file: 'viator_04_test_wreck.png', tiles: '12 Tiles', latency: '248 ms', candidates: '4 Hits (Shipwreck)', status: 'PROCESSED' },
-              { file: 'corsican_02_target.png', tiles: '10 Tiles', latency: '210 ms', candidates: '3 Hits (Shipwreck)', status: 'PROCESSED' },
-              { file: 'artificial_reef_02_clutter.png', tiles: '16 Tiles', latency: '312 ms', candidates: '2 Hits (Clutter)', status: 'PROCESSED' },
-              { file: 'survey_001_reference.png', tiles: '14 Tiles', latency: '274 ms', candidates: '3 Hits (Debris/Net)', status: 'PROCESSED' },
-            ].map((log, idx) => (
+            {(pipelineInfo?.recent_surveys?.length > 0
+              ? pipelineInfo.recent_surveys
+              : [
+                  { file: 'viator_04_test_wreck.png', tiles: '12 Tiles', latency: '248 ms', candidates: '4 Hits (Shipwreck)', status: 'PROCESSED' },
+                  { file: 'corsican_02_target.png', tiles: '10 Tiles', latency: '210 ms', candidates: '3 Hits (Shipwreck)', status: 'PROCESSED' },
+                  { file: 'artificial_reef_02_clutter.png', tiles: '16 Tiles', latency: '312 ms', candidates: '2 Hits (Clutter)', status: 'PROCESSED' },
+                  { file: 'survey_001_reference.png', tiles: '14 Tiles', latency: '274 ms', candidates: '3 Hits (Debris/Net)', status: 'PROCESSED' },
+                ]
+            ).map((log: any, idx: number) => (
               <div 
                 key={idx} 
                 className="p-3.5 rounded-2xl bg-[#fcfcfc] border border-[#e6e6e6] hover:bg-white hover:border-slate-300 transition-colors flex items-center justify-between"

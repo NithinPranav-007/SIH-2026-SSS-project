@@ -35,4 +35,16 @@ async def submit_contact_review(
     if not updated_contact:
         raise HTTPException(status_code=404, detail=f"Contact '{contact_id}' not found.")
 
+    # Phase 6 Continuous Learning: capture sample for active learning
+    try:
+        from backend.app.services.active_learning_service import ActiveLearningService
+        al_service = ActiveLearningService(db)
+        al_service.capture_review_sample(
+            contact_id=contact_id,
+            review_status=submission.review_status,
+            review_note=submission.review_note
+        )
+    except Exception:
+        pass  # Non-blocking side effect
+
     return updated_contact

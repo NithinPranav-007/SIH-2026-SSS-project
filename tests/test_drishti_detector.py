@@ -12,6 +12,8 @@ class TestDrishtiDetector:
     @pytest.fixture(scope="class")
     def detector(self):
         """Initializes detector instance."""
+        if not os.path.exists(settings.MODEL_PATH):
+            pytest.skip(f"DRISHTI model weights not downloaded at: {settings.MODEL_PATH}")
         return DrishtiDetector(confidence_threshold=0.10)
 
     def test_model_loads_successfully(self, detector):

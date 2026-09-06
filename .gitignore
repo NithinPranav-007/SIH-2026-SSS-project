@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # SONAR-INTEL .gitignore
 # Python | FastAPI | ML/PyTorch | React/Node | Docker | PostGIS
 # ============================================================
@@ -55,10 +55,10 @@ pyrightconfig.json
 # ---- Environment & Secrets ----
 .env
 .env.*
-!.env.example          # Keep the example template committed
+!.env.example
 backend/.env
 backend/.env.*
-!backend/.env.example  # Keep the example template committed
+!backend/.env.example
 
 # ---- Database ----
 *.db

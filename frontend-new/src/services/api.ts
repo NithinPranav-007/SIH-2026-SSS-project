@@ -93,6 +93,13 @@ export const apiService = {
     return response.data;
   },
 
+  /** Instant demo load using pre-computed benchmark contacts — NO model weights needed. */
+  async previewDemoSample(sampleId: string): Promise<{ survey: SurveyUploadResponse; contacts: Contact[]; sample_info: any; preview_mode: boolean }> {
+    const response = await client.get(`/api/demo/preview/${sampleId}`);
+    return response.data;
+  },
+
+  /** Full ML inference demo load — requires DRISHTI model weights at ml/models/dristri/best_detector.pt. */
   async loadDemoSample(sampleId: string): Promise<{ survey: SurveyUploadResponse; contacts: Contact[]; sample_info: any }> {
     const response = await client.post(`/api/demo/load/${sampleId}`);
     return response.data;
