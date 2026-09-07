@@ -73,6 +73,8 @@ test_sonar_intel.db
 *.onnx
 *.tflite
 *.pb
+*.pkl
+*.pickle
 runs/
 wandb/
 mlruns/
@@ -107,11 +109,8 @@ frontend-new/.cache/
 frontend-new/coverage/
 
 # ---- Outputs (training artifacts, generated reports) ----
-outputs/training/*
-outputs/annotation_samples/*
-outputs/yolo_verification/*
-outputs/reports/*
-outputs/geojson/*
+outputs/*
+outputs/**/*
 !outputs/.gitkeep
 
 # ---- Docker ----

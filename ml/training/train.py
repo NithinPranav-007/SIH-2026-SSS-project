@@ -44,15 +44,30 @@ def parse_args():
 
 def train():
     args = parse_args()
+    import torch
+    import shutil
+
+    os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+    device = args.device
+    if device in ("0", 0, "cuda", "cuda:0") and not torch.cuda.is_available():
+        print("[INFO] CUDA GPU is unavailable in this environment. Falling back to CPU training.")
+        device = "cpu"
+
+    model_src = args.model
+    if model_src == "yolov8n.pt" and not os.path.exists("yolov8n.pt"):
+        print("[INFO] Local 'yolov8n.pt' weights not found; initializing from 'yolov8n.yaml' architecture.")
+        model_src = "yolov8n.yaml"
+
     print("==================================================")
     print("SONAR-INTEL: YOLOv8n Training Pipeline")
     print(f"Dataset YAML : {args.data}")
-    print(f"Base Model   : {args.model}")
-    print(f"Batch Size   : {args.batch} (Optimized for low VRAM 4GB RTX 3050)")
+    print(f"Base Model   : {model_src}")
+    print(f"Batch Size   : {args.batch}")
     print(f"Image Size   : {args.imgsz}")
     print(f"Epochs       : {args.epochs}")
-    print(f"Device       : {args.device}")
-    print(f"Mixed Prec.  : {args.amp}")
+    print(f"Device       : {device}")
+    print(f"Mixed Prec.  : {args.amp if device != 'cpu' else False}")
     print("==================================================")
 
     try:
@@ -65,7 +80,7 @@ def train():
         print(f"[WARNING] Dataset file '{args.data}' not found. Verify path.")
 
     # Load model
-    model = YOLO(args.model)
+    model = YOLO(model_src)
 
     try:
         results = model.train(
@@ -73,21 +88,30 @@ def train():
             epochs=args.epochs,
             batch=args.batch,
             imgsz=args.imgsz,
-            device=args.device,
-            amp=args.amp,
+            device=device,
+            amp=args.amp if device != "cpu" else False,
             patience=args.patience,
             project=args.project,
             name=args.name,
             save=True,
-            workers=2,
+            workers=1 if sys.platform == "win32" else 2,
             verbose=True
         )
         print("\n[SUCCESS] Training completed successfully.")
-        print(f"Best model weights saved at: {os.path.join(args.project, args.name, 'weights', 'best.pt')}")
+        best_pt = os.path.join(args.project, args.name, "weights", "best.pt")
+        last_pt = os.path.join(args.project, args.name, "weights", "last.pt")
+        chosen_pt = best_pt if os.path.exists(best_pt) else last_pt
+
+        if os.path.exists(chosen_pt):
+            print(f"Model weights saved at: {chosen_pt}")
+            target_pt = os.path.join("ml", "models", "dristri", "best_detector.pt")
+            os.makedirs(os.path.dirname(target_pt), exist_ok=True)
+            shutil.copy2(chosen_pt, target_pt)
+            print(f"[DEPLOYED] Model successfully deployed to active detector path: {target_pt}")
         return results
     except RuntimeError as oom:
         if "out of memory" in str(oom).lower():
-            print("\n[CUDA OUT OF MEMORY] Low VRAM detected on RTX 3050 (4GB).")
+            print("\n[CUDA OUT OF MEMORY] Low VRAM detected.")
             print("Actionable recovery steps:")
             print("1. Reduce batch size to 1: --batch 1")
             print("2. Reduce image size to 512: --imgsz 512")

@@ -26,6 +26,10 @@ const PAGE_TITLES: Record<string, string> = {
   'gis-mapping':          'GIS Spatial Mapping',
   'ai-pipeline':          'AI Pipeline Monitor',
   'reports':              'Data Products & Export',
+  'anomalies':            'Acoustic Anomaly Discovery',
+  'ml-monitor':           'ML Production Health & Drift',
+  'active-learning':      'Active Learning Retraining Curation',
+  'analyst':              'AI Sonar Analyst Assistant',
 };
 
 export const Header: React.FC<HeaderProps> = ({

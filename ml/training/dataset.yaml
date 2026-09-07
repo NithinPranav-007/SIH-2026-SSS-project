@@ -1,11 +1,11 @@
-# SONAR-INTEL YOLOv8 Dataset Configuration
-# Single-class side-scan sonar artificial anomaly detection benchmark
-
-path: data/interim/yolo_split
+names:
+  0: crab_pot
+  1: submarine_pipeline
+  2: shipwreck
+  3: ghost_net
+  4: mine_cylinder
+nc: 5
+path: D:/SIH sonar project/SIH-2026-SSS-project-main/SIH-2026-SSS-project-main/data/interim/yolo_split
+test: test/images
 train: train/images
 val: val/images
-test: test/images
-
-nc: 1
-names:
-  0: artificial_anomaly

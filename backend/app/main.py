@@ -59,6 +59,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi import Request, Response
+from fastapi.responses import JSONResponse
+import time
+
+# Timing & Observability Middleware
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        logger.exception("Unhandled server exception on %s %s: %s", request.method, request.url.path, exc)
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Internal server error occurred processing request.", "path": request.url.path}
+        )
+    process_time_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
+    response.headers["X-Process-Time-Ms"] = str(process_time_ms)
+    return response
+
+
 # Mount Routers
 app.include_router(upload_router)
 app.include_router(analysis_router)
@@ -83,11 +104,23 @@ os.makedirs("data/demo", exist_ok=True)
 
 @app.get("/api/health", tags=["System"])
 def health_check():
-    """Operational health probe."""
+    """Operational health probe with model provenance and DB status."""
+    import torch
+    model_on_disk = os.path.exists(settings.MODEL_PATH)
+    cuda_avail = torch.cuda.is_available()
+
     return {
         "status": "healthy",
         "service": "SONAR-INTEL API",
+        "version": settings.app.PROJECT_VERSION,
+        "environment": settings.app.ENV,
         "database": "active",
+        "model": {
+            "name": settings.MODEL_NAME,
+            "version": settings.MODEL_VERSION,
+            "weights_present": model_on_disk,
+            "device": "cuda" if cuda_avail else "cpu"
+        },
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
     }
 

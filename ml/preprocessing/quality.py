@@ -246,3 +246,8 @@ def compute_image_quality(image: np.ndarray) -> Dict[str, Any]:
         warnings=warnings
     )
     return report.to_dict()
+
+
+# Semantic alias
+assess_image_quality = compute_image_quality
+

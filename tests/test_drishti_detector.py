@@ -10,7 +10,8 @@ from backend.app.core.config import settings
 
 class TestDrishtiDetector:
     @pytest.fixture(scope="class")
-    def detector(self):
+    @classmethod
+    def detector(cls):
         """Initializes detector instance."""
         if not os.path.exists(settings.MODEL_PATH):
             pytest.skip(f"DRISHTI model weights not downloaded at: {settings.MODEL_PATH}")

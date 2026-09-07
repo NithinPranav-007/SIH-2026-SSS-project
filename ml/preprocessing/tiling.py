@@ -90,3 +90,8 @@ def map_tile_bbox_to_global(
     """
     x1, y1, x2, y2 = bbox
     return (x1 + offset_x, y1 + offset_y, x2 + offset_x, y2 + offset_y)
+
+
+# Semantic alias
+tile_waterfall = generate_tiles
+

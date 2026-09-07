@@ -82,10 +82,28 @@ class SonarConfig:
 
 class DetectorConfig:
     """Primary detector model provenance & inference hyperparameters."""
-    MODEL_PATH: str = os.getenv(
-        "MODEL_PATH",
-        str(BASE_DIR / "ml" / "models" / "dristri" / "best_detector.pt")
-    )
+    @staticmethod
+    def _resolve_default_model_path() -> str:
+        canonical = BASE_DIR / "ml" / "models" / "drishti" / "best_detector.pt"
+        legacy = BASE_DIR / "ml" / "models" / "dristri" / "best_detector.pt"
+        if canonical.exists():
+            return str(canonical)
+        if legacy.exists():
+            return str(legacy)
+        return str(canonical)
+
+    @staticmethod
+    def _resolve_default_calibrator_path() -> str:
+        canonical = BASE_DIR / "ml" / "models" / "drishti" / "calibrator.pkl"
+        legacy = BASE_DIR / "ml" / "models" / "dristri" / "calibrator.pkl"
+        if canonical.exists():
+            return str(canonical)
+        if legacy.exists():
+            return str(legacy)
+        return str(canonical)
+
+    MODEL_PATH: str = os.getenv("MODEL_PATH", _resolve_default_model_path())
+    CALIBRATOR_PATH: str = os.getenv("CALIBRATOR_PATH", _resolve_default_calibrator_path())
     MODEL_NAME: str = os.getenv("MODEL_NAME", "DRISHTI-YOLOv8s")
     MODEL_VERSION: str = os.getenv("MODEL_VERSION", "baseline-v1")
     MODEL_SHA256: str = os.getenv(

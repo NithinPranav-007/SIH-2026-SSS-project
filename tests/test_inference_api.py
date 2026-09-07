@@ -13,7 +13,8 @@ from backend.app.main import app
 
 class TestInferenceAPI:
     @pytest.fixture(scope="class")
-    def client(self):
+    @classmethod
+    def client(cls):
         return TestClient(app)
 
     @pytest.fixture

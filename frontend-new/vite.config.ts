@@ -20,5 +20,18 @@ export default defineConfig({
         rewrite: (path) => path,
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-map': ['maplibre-gl'],
+          'vendor-icons': ['lucide-react'],
+          'vendor-http': ['axios'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 900,
   }
 })
