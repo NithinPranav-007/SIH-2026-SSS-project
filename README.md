@@ -1,4 +1,4 @@
-# Sonar-Intel
+# Sonar-Intel: Maritime Debris Intelligence & Ghost Net Drift Forecasting Platform
 
 [![CI](https://github.com/NithinPranav-007/SIH-2026-SSS-project/actions/workflows/ci.yml/badge.svg)](https://github.com/NithinPranav-007/SIH-2026-SSS-project/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://python.org)
@@ -6,42 +6,35 @@
 [![React 18](https://img.shields.io/badge/React-18.2-61DAFB?logo=react&logoColor=black)](https://reactjs.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Ultralytics YOLOv8](https://img.shields.io/badge/YOLOv8-8.4-00FFFF?logo=yolo&logoColor=black)](https://github.com/ultralytics/ultralytics)
+[![Copernicus Marine](https://img.shields.io/badge/CMEMS-GLORYS12V1-005B94?logo=copernicus&logoColor=white)](https://marine.copernicus.eu/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Sonar-Intel** is an industry-grade, AI-powered Side-Scan Sonar (SSS) marine anomaly detection, hydrographic triage, and spatial intelligence platform. It automates the detection, classification, acoustic validation, and georeferencing of subsea targets — including shipwrecks, submarine pipelines, ghost fishing nets, and cylindrical mine-like objects — from raw high-resolution sonar waterfall imagery.
+**Sonar-Intel** is an industry-grade, AI-powered Side-Scan Sonar (SSS) anomaly detection, hydrographic triage, and ocean intelligence platform. It automates the detection, classification, acoustic validation, and georeferencing of subsea contacts — including shipwrecks, submarine pipelines, ghost fishing nets, and cylindrical mine-like objects — and couples these acoustic detections directly with physical oceanography to forecast the multi-day ($24\text{h}$, $48\text{h}$, $72\text{h}$) Lagrangian drift trajectory of derelict fishing gear.
 
-Sonar-Intel bridges deep learning with underwater acoustic physics, pairing computer vision proposals with acoustic shadow validation, multi-ping persistence tracking, explainable AI (XAI), and RFC 7946 GeoJSON GIS export.
-
----
-
-## Overview
-
-Side-scan sonar surveys generate continuous waterfall imagery spanning nautical miles. Traditional manual review by hydrographers is labor-intensive, fatigue-prone, and inconsistent. Sonar-Intel provides an end-to-end mission intelligence workflow:
-
-1. **Automated DRISHTI Detection** — Fine-tuned YOLOv8s detector running on overlapping 640&times;640 tiles with border non-maximum suppression (NMS).
-2. **Acoustic Physics Validation** — Evaluates acoustic shadow deficit, local contrast ratios, and geometric regularity to suppress reverberation and natural seabed clutter.
-3. **Multi-Ping Persistence Tracking** — Correlates observations across consecutive waterfall pings using IoU and cross-track spatial association (`track_id`, observation count, stability).
-4. **Target Dimensioning** — Computes physical metric dimensions (`length_m`, `width_m`, `area_m2`, aspect ratio, shadow length) from acoustic swath geometry and towfish navigation.
-5. **Unknown Anomaly Discovery** — 37-dimensional normalized acoustic embeddings with Mahalanobis distance scoring surface novel, uncatalogued seafloor contacts.
-6. **Calibrated Operational Risk** — Classifies contact hazard level (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`) using physical dimensions, ordnance potential, and navigational obstruction safety standards.
-7. **Human-in-the-Loop Triage** — Review console for hydrographers (`CONFIRMED`, `FALSE_POSITIVE`, `UNCERTAIN`) with immutable audit logging.
-8. **Interoperable Spatial Export** — One-click export to RFC 7946 GeoJSON and CSV for direct integration into QGIS, ArcGIS, and maritime ECDIS navigation systems.
+Sonar-Intel bridges deep convolutional perception with underwater acoustic physics and global ocean current reanalysis, providing automated highlight-shadow validation, multi-ping persistence tracking, explainable AI (XAI), Runge-Kutta hydrodynamic advection, empirical uncertainty dispersion cones, and RFC 7946 GeoJSON GIS export.
 
 ---
 
-## Key Features
+## Key Capabilities
 
-- **Ghost Net Drift Forecasting & Ocean Intelligence** — Physics-based Lagrangian drift modeling driven by Copernicus GLORYS12V1 surface hydrodynamic reanalysis ($uo, vo, \theta_o, S_o, \eta, \text{mlotst}$) and INCOIS LAS subsurface intelligence. Computes 24h/48h/72h trajectory milestones via 2nd-order Runge-Kutta advection, empirical 95% uncertainty dispersion cones, and marine debris retention hotspots.
-- **Physics-Informed Deep Residuals** — PyTorch GRU and LSTM neural residual heads with Huber loss and trajectory-level zero-leakage splitting. Operates under strict zero-fabrication standards (Rule 0 & 21), halting ML training gracefully when real drifter tracks are absent and promoting deterministic physics as the operational champion.
-- **Automated Model Weight Manager** — Hash-verified downloader (`scripts/download_models.py`) fetches and validates the official DRISHTI weights from Hugging Face with SHA256 cryptographic verification.
-- **DRISHTI Preprocessing Engine** — Deterministic Lee speckle noise filter (MMSE) and CLAHE contrast enhancement adapted specifically for low-contrast sonar acoustics.
-- **10-Indicator Acoustic Quality Engine** — Computes SNR, dynamic range, Laplacian blur acutance, Weber contrast, shadow visibility, nadir interference spike, dropout rows, saturation clipping, and speckle index.
-- **Physics-Guided Fallback** — In air-gapped environments without binary weights, an acoustic highlight-shadow pairing engine continues to propose candidate targets.
-- **Explainability Engine (XAI)** — Generates structured positive acoustic evidence and negative caveats for every contact to accelerate human review.
-- **AI Sonar Analyst** — Offline, deterministic natural language query engine (`/api/analyst/query`) translating operator prompts (e.g., *"show all confirmed shipwrecks with high risk"*) into structured filters.
-- **Production Dual-Database Architecture** — Works out-of-the-box with zero configuration using SQLite (`sonar_intel_fallback.db`), and transitions seamlessly to enterprise PostgreSQL + PostGIS.
-- **Optimized Frontend Bundle** — React 18 + TypeScript SPA with Vite chunk splitting (`vendor-react`, `vendor-map`, `vendor-icons`, `vendor-http`) for sub-second page loads.
-- **Full Test Suite (98 Tests, 100% Passing)** — Unit, integration, smoke, schema verification, and 21 dedicated drift oceanography tests covering all subsystems.
+### 1. Acoustic Sonar Anomaly Detection & Triage
+- **Automated DRISHTI Detection** — Fine-tuned YOLOv8s detector running on overlapping 640&times;640 tiles with border non-maximum suppression (NMS).
+- **Acoustic Physics Validation** — Evaluates acoustic shadow deficit, local contrast ratios, and geometric regularity to suppress reverberation and natural seabed clutter.
+- **Multi-Ping Persistence Tracking** — Correlates observations across consecutive waterfall pings using IoU and cross-track spatial association (`track_id`, observation count, stability).
+- **Target Metric Dimensioning** — Computes physical metric dimensions (`length_m`, `width_m`, `area_m2`, aspect ratio, shadow length) from acoustic swath geometry and towfish navigation.
+- **Unknown Anomaly Discovery** — 37-dimensional normalized acoustic embeddings with Mahalanobis distance scoring surface novel, uncatalogued seafloor contacts.
+- **Calibrated Operational Risk** — Classifies contact hazard level (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`) using physical dimensions, ordnance potential, and navigational obstruction safety standards.
+- **Human-in-the-Loop Triage** — Review console for hydrographers (`CONFIRMED`, `FALSE_POSITIVE`, `UNCERTAIN`) with immutable audit logging.
+- **Interoperable Spatial Export** — One-click export to RFC 7946 GeoJSON and CSV for direct integration into QGIS, ArcGIS, and maritime ECDIS navigation systems.
+
+### 2. Ghost Net Drift Forecasting & Ocean Intelligence
+- **Copernicus Marine GLORYS12V1 Ingestion** — Directly ingests daily global 0.083° physical reanalysis ($uo, vo, \theta_o, S_o, \eta, \text{mlotst}, \text{bottomT}$) at surface depth ($z = 0.494\text{ m}$) under `SURFACE_DRIFT_MODE`.
+- **INCOIS LAS Regional Connector** — Interfaces with the Indian National Centre for Ocean Information Services (INCOIS) Live Access Server for subsurface thermal structure and $D_{26}$ isotherm depth, featuring offline disk caching and graceful fallback.
+- **Runge-Kutta 2nd-Order (RK2) Advection** — Solves Lagrangian transport $\frac{d\vec{x}}{dt} = \vec{u}(\vec{x}, t)$ via midpoint numerical integration with truncation error $\mathcal{O}(\Delta t^2)$, preserving mesoscale eddy circulation and vorticity.
+- **Empirical 95% Uncertainty Dispersion Cones** — Implements Okubo-type horizontal eddy diffusion ($\sigma_r(t) = \sqrt{\sigma_0^2 + 2 D_h t} + \gamma \bar{v} t$), yielding bounding polygons at $24\text{h}$, $48\text{h}$, and $72\text{h}$ horizons.
+- **Marine Debris Hotspot & Retention Intelligence** — Evaluates kinematic convergence $-\nabla \cdot \vec{u}$, relative vorticity $\zeta$, and mixed layer depth to compute a $0\text{--}100$ debris retention index.
+- **Physics-Informed Deep Residual Heads** — PyTorch GRU and LSTM neural residual architectures with Huber loss ($\delta = 1.0\text{ km}$) and zero-leakage trajectory group splitting.
+- **Strict Zero-Fabrication Policy (Rule 0 & Rule 21)** — Real-world drifter tracking data is rigorously audited. When field tracks are absent, ML training halts safely without synthesizing fake tracks, and deterministic Runge-Kutta RK2 physics is retained as the verified Champion model.
 
 ---
 
@@ -52,93 +45,147 @@ flowchart TD
     subgraph UI["Frontend (React 18 + TypeScript + Vite)"]
         DASH["Operations Dashboard"]
         WORKSPACE["Waterfall Analysis Workspace"]
-        MAP["MapLibre GL Nautical Chart"]
+        MAP["MapLibre GL Nautical GIS"]
         TRIAGE["Contact Verification Console"]
+        DRIFT_PANEL["Lagrangian Drift Predictor"]
+        CHART["Drift Trajectory & Dispersion Chart"]
         ANALYST["AI Sonar Analyst"]
     end
 
     subgraph API["Backend API (FastAPI + Pydantic v2)"]
         GATEWAY["FastAPI Application Gateway\n(CORS, Timing Middleware, Security Validation)"]
-        ROUTERS["Domain Routers\n(/surveys, /contacts, /inference, /analyst, /reports)"]
-        SERVICES["Service Orchestrator\n(InferenceService, GeolocationService, SonarService)"]
+        ROUTERS["Domain Routers\n(/surveys, /contacts, /drift, /analyst, /reports)"]
+        SERVICES["Service Orchestration\n(InferenceService, GeolocationService, DriftService)"]
     end
 
-    subgraph ML["Machine Learning & Physics Engine"]
+    subgraph CORE["Detection & Physical Oceanography Engine"]
         PRE["DRISHTI Preprocessor\n(Lee Speckle Filter + CLAHE)"]
-        TILE["Waterfall Tiler\n(640x640, 20% overlap)"]
         DET["DRISHTI YOLOv8s\n(Weights: best_detector.pt)"]
-        TRACK["Multi-Ping Tracker\n(IoU + Cross-track association)"]
-        FUSION["14-Feature Acoustic Fusion\n& Crop Classifier"]
-        MEASURE["Target Dimensioning\n(Acoustic Shadow & Metric Scaler)"]
-        EMBED["37-D Acoustic Embedder\n& Mahalanobis Anomaly Engine"]
-        RISK["Operational Risk Scorer & XAI"]
+        FUSION["14-Feature Acoustic Fusion\n& Target Dimensioning"]
+        COP["Copernicus GLORYS12V1 Ingestor\n(uo, vo, thetao, so, zos, mlotst)"]
+        INCOIS["INCOIS LAS Subsurface Connector\n(D26 Isotherm & Thermal Proxy)"]
+        RK2["Runge-Kutta RK2 Advection\n(Geodesic Spherical Physics)"]
+        CONE["Okubo Uncertainty Diffusion Cones\n(95% CI Spatial Polygons)"]
+        HOTSPOT["Hotspot & Retention Engine\n(Convergence div(u) + Vorticity)"]
+        RESIDUAL["PyTorch GRU / LSTM Residuals\n(Zero-Leakage Group Split)"]
     end
 
     subgraph DB["Storage Layer"]
-        PG["PostgreSQL + PostGIS (Production)"]
-        SQ["SQLite Fallback (Development & Offline)"]
+        PG["PostgreSQL 15 + PostGIS (Production)"]
+        SQ["SQLite Fallback (Offline & Edge)"]
     end
 
-    UI -->|Upload Sonar + Nav CSV| GATEWAY
+    UI -->|Upload Sonar Swath| GATEWAY
     GATEWAY --> ROUTERS --> SERVICES
-    SERVICES --> PRE --> TILE --> DET --> TRACK --> FUSION --> MEASURE --> EMBED --> RISK
-    RISK --> SERVICES
-    SERVICES --> DB
-    SERVICES -->|Canonical Contacts + GeoJSON| ROUTERS --> UI
+    SERVICES --> PRE --> DET --> FUSION --> DB
+    SERVICES -->|Verified Ghost Net Target| COP --> RK2 --> CONE --> HOTSPOT --> RESIDUAL
+    INCOIS -.-> HOTSPOT
+    HOTSPOT --> DB
+    SERVICES -->|Canonical Contacts + Drift GeoJSON| ROUTERS --> UI
 ```
 
 ---
 
-## ML Pipeline
+## End-to-End Operational Workflow
 
 ```
-Raw Sonar Waterfall (.png / .tif)
-   │
-   ▼
-[1. Acoustic Quality Assessment] ──► 10 acoustic indicators (SNR, blur, speckle, dynamic range)
-   │
-   ▼
-[2. DRISHTI Preprocessing] ───────► Lee MMSE Speckle Filter (5x5) + CLAHE (clip=2.0)
-   │
-   ▼
-[3. Waterfall Tiling] ────────────► 640x640 overlapping tiles (stride = 512 px)
-   │
-   ▼
-[4. DRISHTI YOLOv8s Inference] ──► Candidate proposals across 5 classes
-   │
-   ▼
-[5. Multi-Ping Tracking] ────────► IoU & cross-track temporal persistence association
-   │
-   ▼
-[6. Acoustic Physics Fusion] ────► Highlight-shadow contrast, second-stage crop classifier
-   │
-   ▼
-[7. Target Dimensioning] ────────► Physical length, width, area, aspect ratio, shadow length
-   │
-   ▼
-[8. Anomaly & Risk Engine] ──────► 37-D embeddings, Mahalanobis novelty, hazard tiers
-   │
-   ▼
-[9. Georeferencing] ─────────────► Orthogonal projection: ping / across-track offset ──► WGS-84
-   │
-   ▼
-Canonical Contact JSON & RFC 7946 GeoJSON FeatureCollection
+[ Raw Sonar Waterfall (.png / .tif) ]
+       │
+       ▼
+[1. Acoustic Quality Assessment ] ──► 10 acoustic indicators (SNR, acutance, speckle, dynamic range)
+       │
+       ▼
+[2. DRISHTI Preprocessing ] ───────► Lee MMSE Speckle Filter (5x5) + CLAHE (clip=2.0)
+       │
+       ▼
+[3. Waterfall Tiling ] ────────────► 640x640 overlapping tiles (stride = 512 px, 20% overlap)
+       │
+       ▼
+[4. DRISHTI YOLOv8s Inference ] ──► Candidate proposals across 5 target classes
+       │
+       ▼
+[5. Multi-Ping Persistence ] ─────► IoU & cross-track temporal persistence tracking
+       │
+       ▼
+[6. Acoustic Shadow Validation ] ─► Highlight-shadow contrast, second-stage crop classifier
+       │
+       ▼
+[7. Target Dimensioning ] ────────► Metric length, width, area, aspect ratio, shadow length
+       │
+       ▼
+[8. Operator Triage Console ] ────► Hydrographer review: Confirm "Ghost Net"
+       │
+       ▼
+[9. Ocean Drift Intelligence ] ───► Ingests Copernicus GLORYS12V1 surface velocities (uo, vo)
+       │                             Computes 24h / 48h / 72h Runge-Kutta RK2 advection
+       │                             Generates 95% confidence uncertainty dispersion cones
+       │                             Calculates marine debris retention & hotspot score
+       │
+       ▼
+[10. Nautical Vector GIS ] ───────► MapLibre GL rendering of sonar swath + drift vectors
+       │
+       ▼
+[ RFC 7946 GeoJSON Export ] ──────► Interoperable export for salvage ROV & maritime ECDIS
 ```
 
 ---
 
-## Models & Specifications
+## Models & Technical Specifications
 
-| Property | Primary Detector (DRISHTI) | Second-Stage Classifier | Anomaly Discovery |
-| :--- | :--- | :--- | :--- |
-| **Model Name** | DRISHTI-YOLOv8s | Calibrated Acoustic Fusion | Acoustic Embedding Novelty |
-| **Architecture** | Ultralytics YOLOv8s (fused, 73 layers) | 14-Feature Acoustic Classifier | 37-D Vector Mahalanobis Metric |
-| **Weights Path** | `ml/models/drishti/best_detector.pt` | Embedded Rule Engine | Empirical distribution prototypes |
-| **Model Size** | 22.5 MB (11,127,519 parameters) | Lightweight (in-memory) | In-memory feature vectors |
-| **SHA256 Checksum** | `2f55eec5d8fe6b4737706392e259c02660a8542cddbcbd603f96d606c54cb927` | Verified | N/A |
-| **Source** | [Hugging Face: rehan9599/drishti-detector](https://huggingface.co/rehan9599/drishti-detector) | Integrated | Integrated |
-| **Input Resolution** | 640 &times; 640 px (3 channels) | Local target crop | 37 engineered acoustic features |
-| **Target Classes** | `shipwreck`, `submarine_pipeline`, `ghost_net`, `mine_cylinder`, `crab_pot` | `REAL_TARGET`, `CLUTTER` | `NOVEL_ANOMALY`, `KNOWN_CATALOG` |
+| Property | Primary Sonar Detector | Second-Stage Classifier | Lagrangian Drift Engine | Neural Drift Residuals |
+| :--- | :--- | :--- | :--- | :--- |
+| **Model Designation** | DRISHTI-YOLOv8s | Calibrated Acoustic Fusion | Runge-Kutta RK2 Midpoint | PhysicsGRU / PhysicsLSTM |
+| **Architecture** | Ultralytics YOLOv8s (73 layers) | 14-Feature Acoustic Crop Net | Deterministic Hydrodynamics | 2-Layer GRU / LSTM (64 hidden) |
+| **Parameters** | 11,127,519 parameters | Rule-based calibration | Pure mathematical physics | ~41k (GRU) / ~54k (LSTM) |
+| **Input Domain** | 640 &times; 640 px Sonar Tiles | Highlight & shadow ROI crop | NetCDF $uo, vo$ Velocity Grids | 12-D Oceanographic Context |
+| **Target Output** | Bounding boxes & class labels | `REAL_TARGET`, `CLUTTER` | Multi-horizon coordinates | Metric displacement residuals $(\Delta E, \Delta N)$ |
+| **Operational Status** | Active (Hugging Face verified) | Active | **CHAMPION (Active)** | Standby (Zero-Fabrication Guard) |
+| **Weights Path** | `ml/models/drishti/best_detector.pt` | Embedded rule weights | Analytical numerical engine | `ml/models/drift/` |
+
+---
+
+## Ocean Intelligence & Drift Forecasting Engine
+
+### 1. Hydrodynamic Reanalysis Ingestion
+- **Product:** Copernicus Marine Service `GLOBAL_MULTIYEAR_PHY_001_030` (GLORYS12V1).
+- **Source File:** `drift_forecasting_dataset/cmems_mod_glo_phy_my_0.083deg_P1D-m_1788771128865.nc` ($388\text{ MB}$).
+- **Coverage:** Global Equirectangular Grid (Lat: $-80^\circ$ to $+90^\circ$, Lon: $-180^\circ$ to $+179.9167^\circ$).
+- **Resolution:** $0.08333^\circ \times 0.08333^\circ$ ($\sim 9.25\text{ km}$ at equator), daily mean time step.
+- **Variables:** $uo$ (zonal velocity), $vo$ (meridional velocity), $\theta_o$ (potential temperature), $S_o$ (salinity), $\eta$ (sea surface height), $\text{mlotst}$ (mixed layer depth), $\text{bottomT}$ (seafloor temperature).
+
+### 2. INCOIS LAS Subsurface Connector
+- **Endpoint:** `https://las.incois.gov.in/las/output/3E501F741E424922D358B673CBA82351_ferret_listing.txt`
+- **Product:** Argo Value Added Products (`/home/las/datasets/argo/ValueAddedProducts.nc`).
+- **Variables:** `DATETIME`, `TIME`, `LON`, `LAT`, `D26` (Depth of $26^\circ\text{C}$ isotherm in meters).
+- **Resilience:** Implements offline caching (`data/ocean/incois/raw/`) and automatic fallback (`INCOIS_SOURCE_UNAVAILABLE`) to ensure shipboard edge operations never crash when satellite connections are interrupted.
+
+### 3. Lagrangian Physics Formulation
+The Lagrangian advection equation $\frac{d\vec{x}}{dt} = \vec{u}(\vec{x}, t)$ is solved using Runge-Kutta 2nd-order (RK2) midpoint numerical integration:
+
+$$\vec{k}_1 = \vec{u}(\vec{x}_t, t), \quad \vec{x}_{\text{mid}} = \vec{x}_t + \vec{k}_1 \cdot \frac{\Delta t}{2}$$
+
+$$\vec{k}_2 = \vec{u}(\vec{x}_{\text{mid}}, t + \frac{\Delta t}{2}), \quad \vec{x}_{t+\Delta t} = \vec{x}_t + \vec{k}_2 \cdot \Delta t$$
+
+Coordinates are converted along great-circle spherical geodesy ($R = 6,371,000\text{ m}$):
+
+$$\Delta \phi = \frac{v_o \cdot \Delta t}{R} \cdot \left(\frac{180}{\pi}\right), \quad \Delta \lambda = \frac{u_o \cdot \Delta t}{R \cos(\phi \cdot \frac{\pi}{180})} \cdot \left(\frac{180}{\pi}\right)$$
+
+### 4. Empirical Okubo Uncertainty Cones
+Accounting for unmeasured sub-mesoscale turbulence, wave action, and wind gusts, horizontal dispersion radius $R_{\text{cone}}(t)$ expands according to:
+
+$$R_{\text{cone}}(t) = \sqrt{\sigma_0^2 + 2 D_h t} + \gamma \cdot \bar{v} \cdot t$$
+
+where $\sigma_0 = 500\text{ m}$, $D_h = 25.0\text{ m}^2/\text{s}$, and $\gamma = 0.035$. At standard oceanic current speeds:
+- **$24\text{h}$ Milestone:** Uncertainty radius $\approx \pm 2.6\text{ km}$ ($95\%\text{ CI}$)
+- **$48\text{h}$ Milestone:** Uncertainty radius $\approx \pm 4.2\text{ km}$ ($95\%\text{ CI}$)
+- **$72\text{h}$ Milestone:** Uncertainty radius $\approx \pm 5.8\text{ km}$ ($95\%\text{ CI}$)
+
+### 5. Rule 0 & Rule 21 Zero-Fabrication Scientific Standard
+The provided Copernicus GLORYS12V1 snapshot contains pure Eulerian ocean state grids and **zero in-situ drifter trajectory observations**. In accordance with strict oceanographic integrity:
+- The data sufficiency validator (`ml/drift/ingestion/validators.py`) detected $0$ verified drifter tracks, raising `INSUFFICIENT_TRAINING_DATA`.
+- Synthetic drifter tracks were **not fabricated**.
+- Residual ML training halted safely, and **Runge-Kutta RK2 physics was selected as the verified Champion model**.
+- All API and UI benchmarks report `INSUFFICIENT_VALIDATED_DATA` for ML residuals rather than pseudo-accurate synthetic metrics.
 
 ---
 
@@ -146,16 +193,17 @@ Canonical Contact JSON & RFC 7946 GeoJSON FeatureCollection
 
 | Domain | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Backend Framework** | FastAPI 0.110+ | High-performance asynchronous REST API |
-| **Runtime & Language** | Python 3.10 – 3.13 | Core processing and ML engine |
-| **Deep Learning** | PyTorch, Ultralytics YOLOv8s | Convolutional target detection |
-| **Image Processing** | OpenCV (Headless), NumPy | Lee speckle filtering, CLAHE, morphological operations |
+| **Backend Framework** | FastAPI 0.110+ | Asynchronous REST API gateway |
+| **Runtime & Language** | Python 3.10 – 3.13 | Core processing, physical advection, and ML |
+| **Ocean Data Ingestion** | xarray, netCDF4, NumPy | Equirectangular grid subsetting and lazy evaluation |
+| **Deep Learning** | PyTorch, Ultralytics YOLOv8s | DRISHTI sonar detection and GRU/LSTM residuals |
+| **Image Processing** | OpenCV (Headless), SciPy | Lee speckle filtering, CLAHE, morphological operations |
 | **Data Validation** | Pydantic v2 | Strict schema contracts and serialization |
-| **ORM & Database** | SQLAlchemy 2, SQLite / PostGIS | Persistence with spatial extension support |
-| **Frontend Framework** | React 18, TypeScript 5, Vite 5 | Single Page Application with optimized bundle splitting |
-| **Styling & UI** | TailwindCSS v4, Lucide Icons | Responsive maritime dark/light design system |
-| **Mapping & GIS** | MapLibre GL 4.1 | Hardware-accelerated nautical chart rendering |
-| **Testing** | Pytest, FastAPI TestClient | 77 automated unit and integration tests |
+| **ORM & Database** | SQLAlchemy 2, SQLite / PostGIS | Persistence with dual-database spatial fallback |
+| **Frontend Framework** | React 18, TypeScript 5, Vite 5 | Single Page Application with vendor chunk splitting |
+| **Styling & UI** | TailwindCSS v4, Lucide Icons | High-contrast maritime tactical dark/light design system |
+| **Mapping & GIS** | MapLibre GL 4.1 | Hardware-accelerated bathymetry & drift vector rendering |
+| **Testing** | Pytest, FastAPI TestClient | 98 automated unit, integration, and physics tests |
 
 ---
 
@@ -165,74 +213,87 @@ Canonical Contact JSON & RFC 7946 GeoJSON FeatureCollection
 SIH-2026-SSS-project/
 ├── backend/
 │   ├── app/
-│   │   ├── api/                # REST endpoints (upload, analysis, contacts, analyst...)
-│   │   ├── core/               # Centralized config, logging, model registry
-│   │   ├── database/           # SQLAlchemy models, connection, repository
-│   │   ├── schemas/            # Pydantic v2 data models (Contact, Survey, Review)
-│   │   ├── services/           # InferenceService, SonarService, GeolocationService
+│   │   ├── api/                # REST endpoints (surveys, contacts, drift, analyst...)
+│   │   ├── core/               # Settings, logging, model registry
+│   │   ├── database/           # SQLAlchemy models (surveys, contacts, drift forecasts)
+│   │   ├── schemas/            # Pydantic v2 schemas (Contact, Survey, DriftForecast)
+│   │   ├── services/           # InferenceService, DriftService, OceanDataService
 │   │   └── utils/              # RFC 7946 GeoJSON and CSV exporters
-│   ├── requirements.txt        # Python dependency manifest
+│   ├── requirements.txt        # Python dependency manifest (including xarray & netCDF4)
 │   └── .env.example            # Environment configuration template
 │
 ├── ml/
+│   ├── drift/                  # Ocean Intelligence & Drift Forecasting System
+│   │   ├── ingestion/          # Copernicus NetCDF & INCOIS LAS connectors
+│   │   ├── physics/            # Runge-Kutta RK2 advection & uncertainty cones
+│   │   ├── models/             # 12-D features, PyTorch GRU/LSTM, Huber trainer, registry
+│   │   └── pipeline.py         # Unified CLI (audit-data, compare-models, train, predict)
 │   ├── inference/              # DrishtiDetector, acoustic_fusion, tracking, calibration
 │   ├── models/
-│   │   └── drishti/            # Verified DRISHTI weights (best_detector.pt, calibrator.pkl)
+│   │   ├── drishti/            # Verified DRISHTI weights (best_detector.pt)
+│   │   └── drift/              # Drift model registry metadata
 │   ├── preprocessing/          # Lee filter, CLAHE, tiling, acoustic quality
 │   └── training/               # YOLO dataset config, training, and evaluation scripts
 │
 ├── frontend-new/
 │   ├── src/
-│   │   ├── components/         # Layout, Header, Sidebar, Map, UI components
-│   │   ├── hooks/              # useSurvey state, useToast notification system
-│   │   ├── pages/              # 10 operational views (Dashboard, Waterfall, GIS, Analyst...)
-│   │   ├── services/           # Typed Axios API client
-│   │   └── types/              # TypeScript interfaces
+│   │   ├── components/
+│   │   │   ├── drift/          # DriftPredictionPanel, DriftTrajectoryChart, OceanDataStatus...
+│   │   │   ├── map/            # MapView, DriftLayer (MapLibre GL vectors & uncertainty)
+│   │   │   └── ui/             # StatCard, SkeletonCard, Modal, Toast
+│   │   ├── pages/              # DashboardPage, ContactVerificationPage, GisMappingPage...
+│   │   ├── services/           # Typed Axios API client (including drift endpoints)
+│   │   └── types/              # TypeScript interfaces (detection, drift, survey)
 │   ├── package.json
 │   └── vite.config.ts          # Vite build with manualChunks vendor splitting
 │
 ├── data/
 │   ├── demo/                   # Curated benchmark sonar swaths & nav logs
-│   │   ├── sonar/              # viator_04, corsican_02, survey_001, reef_02
-│   │   └── navigation/         # Corresponding towfish navigation CSVs
-│   ├── interim/yolo_split/     # 640x640 preprocessed train/val/test splits
-│   ├── raw/                    # Runtime uploads (gitignored)
-│   └── processed/              # Runtime outputs (gitignored)
+│   ├── ocean/                  # Oceanographic caches and metadata (gitignored)
+│   └── raw/                    # Runtime survey uploads (gitignored)
+│
+├── docs/
+│   └── drift_forecasting_research_report.md  # 20-section scientific research report
+│
+├── outputs/
+│   └── drift/                  # Reproducible audit reports (data_audit.json, model_comparison.json/csv)
 │
 ├── scripts/
 │   ├── download_models.py      # Automated hash-verified DRISHTI weights downloader
 │   ├── inference_smoke_test.py # End-to-end inference and profiling benchmark
-│   ├── e2e_mvp_test.py         # Full API lifecycle verification script
-│   └── prepare_yolo_dataset.py # 640x640 tiled dataset generator
+│   └── e2e_mvp_test.py         # Full API lifecycle verification script
 │
-├── tests/                      # Pytest automated test suite (77 tests)
+├── tests/                      # Automated Pytest suite (98 tests, 100% passing)
+│   ├── test_drift_copernicus.py
+│   ├── test_drift_incois.py
+│   ├── test_drift_physics.py
+│   ├── test_drift_ml.py
+│   ├── test_drift_alignment.py
+│   └── test_drift_api.py
+│
+├── IMPLEMENTATION_REPORT.md    # 26-item engineering implementation report
 ├── docker-compose.yml          # Full-stack Docker orchestration
 ├── Dockerfile.backend          # Production FastAPI container
-└── README.md                   # Technical documentation
+└── README.md                   # Master technical documentation
 ```
 
 ---
 
-## Requirements
+## Installation & Setup
 
+### Prerequisites
 - **Python**: 3.10, 3.11, 3.12, or 3.13
 - **Node.js**: 18+ or 20+ (with npm)
 - **Git**
-- **Hardware**: CPU (standard x86_64) or NVIDIA GPU with CUDA 12.x (optional, CPU execution is fully supported)
-
----
-
-## Installation
+- **Hardware**: Standard x86_64 CPU (GPU with CUDA 12.x optional; CPU execution is fully supported)
 
 ### 1. Clone the Repository
-
 ```bash
 git clone https://github.com/NithinPranav-007/SIH-2026-SSS-project.git
 cd SIH-2026-SSS-project
 ```
 
 ### 2. Backend Setup
-
 ```bash
 # Create and activate Python virtual environment
 python -m venv .venv
@@ -245,7 +306,7 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r backend/requirements.txt
 
-# Download and verify DRISHTI model weights from Hugging Face
+# Download and verify DRISHTI sonar detector weights from Hugging Face
 python scripts/download_models.py
 
 # Configure environment
@@ -253,7 +314,6 @@ cp backend/.env.example backend/.env
 ```
 
 ### 3. Frontend Setup
-
 ```bash
 cd frontend-new
 npm install
@@ -268,10 +328,12 @@ cd ..
 
 **Terminal 1 — Start the FastAPI Backend:**
 ```bash
-# Activate virtual environment
-.\.venv\Scripts\Activate.ps1  # Windows
-# source .venv/bin/activate    # Linux / macOS
+# Windows
+.\.venv\Scripts\Activate.ps1
+uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 
+# Linux / macOS
+source .venv/bin/activate
 uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 > Interactive OpenAPI documentation available at: **http://127.0.0.1:8000/docs**
@@ -284,7 +346,6 @@ npm run dev
 > Mission Intelligence Console available at: **http://localhost:5173**
 
 ### Option B: Docker Compose (Full Stack)
-
 ```bash
 cp backend/.env.example backend/.env
 docker-compose up --build
@@ -292,65 +353,35 @@ docker-compose up --build
 
 ---
 
-## Automated Testing & Validation
+## Drift Intelligence CLI Commands
 
-The platform includes a comprehensive 77-test verification suite covering unit contracts, data quality metrics, priority scoring, multi-ping tracking, model downloader verification, and full-lifecycle end-to-end integration:
-
-```bash
-# Run the complete test suite
-python -m pytest tests/ -v
-```
-
-**Run the End-to-End MVP Smoke Test:**
-```bash
-python scripts/e2e_mvp_test.py
-```
-
-**Run the Inference & Latency Profiling Test:**
-```bash
-python scripts/inference_smoke_test.py
-```
-
----
-
-## Ghost Net Drift Forecasting & Ocean Intelligence
-
-Sonar-Intel natively couples acoustic sonar detections with physical oceanography to forecast the Lagrangian displacement of derelict fishing nets and marine debris over multi-day operations.
-
-```
-+---------------------------------------------------------------------------------+
-|                         PHYSICAL OCEAN INTELLIGENCE                             |
-|  - Copernicus GLORYS12V1 (0.083° Reanalysis): uo, vo, thetao, so, zos, mlotst   |
-|  - INCOIS LAS Indian Ocean Subsurface Proxy: D26 Isotherm & MLD                 |
-|  - Runge-Kutta 2nd-Order (RK2) Midpoint Advection (Truncation O(dt^2))          |
-|  - Okubo-Type 95% Confidence Empirical Diffusion Dispersion Cones               |
-|  - Marine Debris Hotspot & Retention Index (Convergence div(u) + Vorticity)    |
-|  - PyTorch GRU & LSTM Residual Correction (Huber Loss, delta = 1.0 km)          |
-|  - Strict Zero-Fabrication Standard (Rule 0 & 21): Deterministic Champion       |
-+---------------------------------------------------------------------------------+
-```
-
-### Drift CLI Pipeline Commands
+The drift pipeline provides a standalone CLI for automated ocean data auditing, model benchmarking, and feature generation:
 
 ```bash
-# Audit Copernicus NetCDF and INCOIS LAS datasets
+# 1. Audit Copernicus NetCDF and INCOIS LAS datasets
 python -m ml.drift.pipeline audit-data
 
-# Execute training check (Zero-Fabrication Data Guard)
+# 2. Inspect INCOIS LAS endpoint and refresh local cache
+python -m ml.drift.pipeline inspect-incois
+
+# 3. Execute training check (Zero-Fabrication Data Guard)
 python -m ml.drift.pipeline train
 
-# Generate model comparison benchmarks (JSON + CSV)
+# 4. Generate multi-horizon model comparison benchmarks (JSON + CSV)
 python -m ml.drift.pipeline compare-models
 
-# Extract 12-dimensional oceanographic features
+# 5. Extract 12-dimensional oceanographic features
 python -m ml.drift.pipeline generate-features
+
+# 6. Run CLI trajectory prediction for custom coordinates
+python -m ml.drift.pipeline predict --lat 15.0 --lon 70.0 --hours 72
 ```
 
 ---
 
 ## API Reference
 
-### Core Endpoints
+### Core Sonar Endpoints
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
@@ -361,7 +392,7 @@ python -m ml.drift.pipeline generate-features
 | `POST` | `/api/contacts/{contact_id}/review` | Submit operator triage decision (`CONFIRMED`, `FALSE_POSITIVE`, `UNCERTAIN`) |
 | `GET` | `/api/surveys/{survey_id}/geojson` | Export contacts as RFC 7946 GeoJSON FeatureCollection |
 | `GET` | `/api/surveys/{survey_id}/csv` | Export contacts as tabular CSV |
-| `POST` | `/api/analyst/query` | Query contacts using natural language (AI Sonar Analyst) |
+| `POST` | `/api/analyst/query` | Natural language queries via AI Sonar Analyst |
 | `POST` | `/api/inference/detect` | Standalone single-image anomaly candidate proposal |
 | `GET` | `/api/demo/samples` | List curated benchmark sonar swaths |
 | `POST` | `/api/demo/load/{sample_id}` | Load and analyze a benchmark swath |
@@ -372,33 +403,76 @@ python -m ml.drift.pipeline generate-features
 | :--- | :--- | :--- |
 | `POST` | `/api/drift/predict` | Calculate 24h/48h/72h Lagrangian drift forecast, uncertainty cones, and retention |
 | `GET` | `/api/drift/forecasts/{forecast_id}` | Retrieve detailed forecast record with GeoJSON trajectory & dispersion polygons |
-| `GET` | `/api/drift/forecasts/contact/{contact_id}` | Retrieve all computed drift trajectories for a specific sonar contact |
+| `GET` | `/api/contacts/{contact_id}/drift` | Retrieve all computed drift trajectories for a specific sonar contact |
 | `GET` | `/api/drift/models/comparison` | Benchmark comparison across Physics, GRU, and LSTM models |
-| `GET` | `/api/drift/data-status` | Oceanographic data provenance check (Copernicus GLORYS12V1 & INCOIS LAS) |
+| `GET` | `/api/drift/models` | List registered drift models, versions, and active champion |
+| `GET` | `/api/drift/metrics` | Multi-horizon error metrics and validation status |
+| `GET` | `/api/drift/data-status` | Operational provenance check (Copernicus GLORYS12V1 & INCOIS LAS) |
+
+---
+
+## Automated Testing & Validation
+
+The platform includes a **98-test automated verification suite (100% passing)** covering sonar preprocessing, YOLOv8 inference, multi-ping tracking, risk scoring, ocean data ingestion, geodesic physical advection, neural residual networks, and API endpoints:
+
+```bash
+# Run the complete test suite
+pytest -v
+
+# Run dedicated ocean drift intelligence tests
+pytest -q -k drift
+```
+
+### Test Suite Inventory
+- `tests/test_drishti_detector.py` — DRISHTI YOLOv8s forward inference and NMS
+- `tests/test_drishti_preprocessing.py` — Lee MMSE filter, CLAHE, and dynamic range normalization
+- `tests/test_tracking.py` — Multi-ping IoU and across-track persistence association
+- `tests/test_acoustic_fusion.py` — 14-feature acoustic crop classifier
+- `tests/test_risk.py` — Operational risk scoring and hazard tier classification
+- `tests/test_geojson.py` — RFC 7946 GeoJSON and CSV export compliance
+- `tests/test_drift_copernicus.py` — NetCDF grid parsing, surface depth extraction, bilinear velocity interpolation
+- `tests/test_drift_incois.py` — INCOIS LAS Ferret parser, disk caching, and offline fallback
+- `tests/test_drift_physics.py` — Runge-Kutta RK2 midpoint integration, geodesic displacement, uncertainty cone growth
+- `tests/test_drift_ml.py` — GRU/LSTM forward passes, Huber loss, group split integrity, zero-fabrication guard
+- `tests/test_drift_alignment.py` — Local tangent plane $(\Delta E, \Delta N)$ projection and antimeridian wrapping
+- `tests/test_drift_api.py` — FastAPI drift endpoint contracts and GeoJSON responses
 
 ---
 
 ## Measured Performance Benchmarks
 
-Measured on benchmark sonar swath `survey_001_raw.png` (1280 &times; 1800 px, 12 overlapping 640&times;640 tiles) on AMD Ryzen 7 5825U (CPU execution):
+Measured on benchmark sonar swath `survey_001_raw.png` ($1280 \times 1800\text{ px}$, 12 overlapping tiles) and global Copernicus GLORYS12V1 reanalysis ($2041 \times 4320$ grid) on AMD Ryzen 7 5825U (CPU execution):
 
-| Pipeline Stage | Measured Latency | Throughput |
+| Pipeline Stage | Measured Latency | Throughput / Resource Utilization |
 | :--- | :--- | :--- |
-| **Model Initialization** | 300 ms | Cached per-process singleton |
-| **Preprocessing (Lee + CLAHE)** | ~246 ms | Full 1280x1800 swath |
-| **YOLOv8s Tiled Inference** | ~4,200 ms (CPU) / ~280 ms (CUDA) | 12 tiles (350 ms/tile CPU) |
-| **Post-Processing (Tracking + XAI + Geo)** | ~120 ms | 8 candidates &rarr; 3 contacts |
-| **Total End-to-End Pipeline** | **~5.1 s (CPU) / ~0.8 s (GPU)** | Full survey swath |
+| **Model Initialization** | $300\text{ ms}$ | Cached per-process singleton |
+| **Sonar Preprocessing (Lee + CLAHE)** | $\sim 246\text{ ms}$ | Full $1280 \times 1800\text{ px}$ swath |
+| **YOLOv8s Tiled Inference** | $\sim 4,200\text{ ms}$ (CPU) / $\sim 280\text{ ms}$ (CUDA) | 12 tiles ($350\text{ ms}$/tile CPU) |
+| **Post-Processing (Tracking + XAI + Geo)** | $\sim 120\text{ ms}$ | 8 candidates $\to$ 3 confirmed contacts |
+| **Lagrangian Advection (72h, 144 steps)** | $< 2.0\text{ ms}$ | Vectorized NumPy array indexing |
+| **Full Drift Prediction API Round-Trip** | $< 35\text{ ms}$ | Advection + uncertainty polygon + GeoJSON |
+| **Frontend Production Build (Vite)** | $6.18\text{ s}$ | Zero TypeScript errors, chunk-split bundle |
+| **Total End-to-End Survey Triage** | **$\sim 5.1\text{ s}$ (CPU) / $\sim 0.8\text{ s}$ (GPU)** | Ingestion $\to$ Detection $\to$ Drift Trajectory |
 
 ---
 
 ## Security & Operational Safeguards
 
 - **Strict File Upload Validation** — Filenames are sanitized against path traversal (`os.path.basename` and character whitelisting). Image uploads undergo magic header byte inspection and OpenCV decoding validation to prevent arbitrary file execution.
-- **Upload Size Limits** — Configurable upload ceiling (default 250 MB) enforced via `settings.security.MAX_UPLOAD_SIZE_BYTES`.
-- **Safe Error Handling** — Global exception middleware prevents internal stack traces from leaking to clients in production.
+- **Upload Size Ceiling** — Configurable upload ceiling (default 250 MB) enforced via `settings.security.MAX_UPLOAD_SIZE_BYTES`.
 - **Zero Hardcoded Secrets** — All configurations, endpoints, and credentials are managed via environment variables documented in `.env.example`.
 - **Honest Coordinate Flagging** — When navigation data is absent, contacts are explicitly tagged `localization_status: "UNAVAILABLE"` with `null` coordinates. Coordinates are never fabricated.
+- **Docker Context Protection** — Large scientific datasets and raw NetCDF binaries are excluded from Docker container images via `.dockerignore`.
+
+---
+
+## Research Documentation & Artifacts
+
+For in-depth mathematical formulations, coordinate transformations, and data audits, refer to:
+- **Scientific Research Report:** [`docs/drift_forecasting_research_report.md`](file:///d:/SIH%20sonar%20project/SIH-2026-SSS-project-main/SIH-2026-SSS-project-main/docs/drift_forecasting_research_report.md) (20 sections covering physical oceanography, missing dynamics, Runge-Kutta advection, and residual deep learning).
+- **Engineering Implementation Report:** [`IMPLEMENTATION_REPORT.md`](file:///d:/SIH%20sonar%20project/SIH-2026-SSS-project-main/SIH-2026-SSS-project-main/IMPLEMENTATION_REPORT.md) (26 items detailing schema models, REST contracts, and operational validation).
+- **Data Audit Summary:** [`outputs/drift/data_audit.json`](file:///d:/SIH%20sonar%20project/SIH-2026-SSS-project-main/SIH-2026-SSS-project-main/outputs/drift/data_audit.json).
+- **Model Benchmark Results:** [`outputs/drift/model_comparison.json`](file:///d:/SIH%20sonar%20project/SIH-2026-SSS-project-main/SIH-2026-SSS-project-main/outputs/drift/model_comparison.json) and [`outputs/drift/model_comparison.csv`](file:///d:/SIH%20sonar%20project/SIH-2026-SSS-project-main/SIH-2026-SSS-project-main/outputs/drift/model_comparison.csv).
 
 ---
 
