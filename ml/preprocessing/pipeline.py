@@ -9,7 +9,7 @@ The original raw image MUST NEVER be overwritten.
 Always preserve raw image, processed image, and metadata.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 import os
 import cv2
 import numpy as np

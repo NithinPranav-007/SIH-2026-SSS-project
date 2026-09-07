@@ -6,7 +6,7 @@ GET /api/ml/metrics
 GET /api/ml/quality/{survey_id}
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func

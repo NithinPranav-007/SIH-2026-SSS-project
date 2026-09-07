@@ -2,7 +2,6 @@
 Tests for ML Platform and Analyst API Endpoints.
 """
 
-import pytest
 from fastapi.testclient import TestClient
 from backend.app.main import app
 

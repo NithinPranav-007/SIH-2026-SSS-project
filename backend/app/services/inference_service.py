@@ -9,15 +9,14 @@ Canonical Contact Transformation.
 Pluggable and configuration-driven.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 import os
 import logging
 import cv2
-import numpy as np
 
 logger = logging.getLogger(__name__)
 
-from backend.app.schemas.contact import Contact, BoundingBox, ContactMeasurements, ContactExplanation
+from backend.app.schemas.contact import Contact, ContactMeasurements, ContactExplanation
 from backend.app.core.config import settings
 from backend.app.core.model_registry import ModelRegistry
 from ml.preprocessing.tiling import generate_tiles
@@ -34,7 +33,6 @@ from ml.inference.embedding import ContactEmbedder
 from ml.inference.anomaly import UnknownAnomalyDetector
 from ml.inference.risk import RiskScorer
 from ml.inference.explanation import ExplainabilityEngine
-from backend.app.services.scoring_service import calculate_contact_priority
 from backend.app.services.geolocation_service import GeolocationService
 from backend.app.services.transformer import transform_drishti_detections_to_contacts
 

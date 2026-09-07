@@ -2,7 +2,6 @@
 Tests for Confidence Calibration.
 """
 
-import pytest
 from ml.inference.calibration import ConfidenceCalibrator
 
 

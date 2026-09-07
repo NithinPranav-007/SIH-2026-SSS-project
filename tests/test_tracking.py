@@ -2,7 +2,6 @@
 Tests for Multi-Ping Tracking (SonarPingTracker).
 """
 
-import pytest
 from ml.tracking.ping_tracker import SonarPingTracker
 
 

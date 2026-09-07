@@ -2,7 +2,6 @@
 Tests for Explainability Engine (ExplainabilityEngine).
 """
 
-import pytest
 from ml.inference.explanation import ExplainabilityEngine
 
 

@@ -2,7 +2,6 @@
 Tests for Physical Target Measurements (TargetMeasurer).
 """
 
-import pytest
 from ml.inference.measurement import TargetMeasurer
 
 

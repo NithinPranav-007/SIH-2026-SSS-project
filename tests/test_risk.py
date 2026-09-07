@@ -2,7 +2,6 @@
 Tests for Calibrated Risk Scoring (RiskScorer).
 """
 
-import pytest
 from ml.inference.risk import RiskScorer
 
 

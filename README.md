@@ -31,6 +31,8 @@ Side-scan sonar surveys generate continuous waterfall imagery spanning nautical 
 
 ## Key Features
 
+- **Ghost Net Drift Forecasting & Ocean Intelligence** — Physics-based Lagrangian drift modeling driven by Copernicus GLORYS12V1 surface hydrodynamic reanalysis ($uo, vo, \theta_o, S_o, \eta, \text{mlotst}$) and INCOIS LAS subsurface intelligence. Computes 24h/48h/72h trajectory milestones via 2nd-order Runge-Kutta advection, empirical 95% uncertainty dispersion cones, and marine debris retention hotspots.
+- **Physics-Informed Deep Residuals** — PyTorch GRU and LSTM neural residual heads with Huber loss and trajectory-level zero-leakage splitting. Operates under strict zero-fabrication standards (Rule 0 & 21), halting ML training gracefully when real drifter tracks are absent and promoting deterministic physics as the operational champion.
 - **Automated Model Weight Manager** — Hash-verified downloader (`scripts/download_models.py`) fetches and validates the official DRISHTI weights from Hugging Face with SHA256 cryptographic verification.
 - **DRISHTI Preprocessing Engine** — Deterministic Lee speckle noise filter (MMSE) and CLAHE contrast enhancement adapted specifically for low-contrast sonar acoustics.
 - **10-Indicator Acoustic Quality Engine** — Computes SNR, dynamic range, Laplacian blur acutance, Weber contrast, shadow visibility, nadir interference spike, dropout rows, saturation clipping, and speckle index.
@@ -39,7 +41,7 @@ Side-scan sonar surveys generate continuous waterfall imagery spanning nautical 
 - **AI Sonar Analyst** — Offline, deterministic natural language query engine (`/api/analyst/query`) translating operator prompts (e.g., *"show all confirmed shipwrecks with high risk"*) into structured filters.
 - **Production Dual-Database Architecture** — Works out-of-the-box with zero configuration using SQLite (`sonar_intel_fallback.db`), and transitions seamlessly to enterprise PostgreSQL + PostGIS.
 - **Optimized Frontend Bundle** — React 18 + TypeScript SPA with Vite chunk splitting (`vendor-react`, `vendor-map`, `vendor-icons`, `vendor-http`) for sub-second page loads.
-- **Full Test Suite (77 Tests, 100% Passing)** — Unit, integration, smoke, and schema verification tests covering all subsystems.
+- **Full Test Suite (98 Tests, 100% Passing)** — Unit, integration, smoke, schema verification, and 21 dedicated drift oceanography tests covering all subsystems.
 
 ---
 
@@ -311,6 +313,41 @@ python scripts/inference_smoke_test.py
 
 ---
 
+## Ghost Net Drift Forecasting & Ocean Intelligence
+
+Sonar-Intel natively couples acoustic sonar detections with physical oceanography to forecast the Lagrangian displacement of derelict fishing nets and marine debris over multi-day operations.
+
+```
++---------------------------------------------------------------------------------+
+|                         PHYSICAL OCEAN INTELLIGENCE                             |
+|  - Copernicus GLORYS12V1 (0.083° Reanalysis): uo, vo, thetao, so, zos, mlotst   |
+|  - INCOIS LAS Indian Ocean Subsurface Proxy: D26 Isotherm & MLD                 |
+|  - Runge-Kutta 2nd-Order (RK2) Midpoint Advection (Truncation O(dt^2))          |
+|  - Okubo-Type 95% Confidence Empirical Diffusion Dispersion Cones               |
+|  - Marine Debris Hotspot & Retention Index (Convergence div(u) + Vorticity)    |
+|  - PyTorch GRU & LSTM Residual Correction (Huber Loss, delta = 1.0 km)          |
+|  - Strict Zero-Fabrication Standard (Rule 0 & 21): Deterministic Champion       |
++---------------------------------------------------------------------------------+
+```
+
+### Drift CLI Pipeline Commands
+
+```bash
+# Audit Copernicus NetCDF and INCOIS LAS datasets
+python -m ml.drift.pipeline audit-data
+
+# Execute training check (Zero-Fabrication Data Guard)
+python -m ml.drift.pipeline train
+
+# Generate model comparison benchmarks (JSON + CSV)
+python -m ml.drift.pipeline compare-models
+
+# Extract 12-dimensional oceanographic features
+python -m ml.drift.pipeline generate-features
+```
+
+---
+
 ## API Reference
 
 ### Core Endpoints
@@ -328,6 +365,16 @@ python scripts/inference_smoke_test.py
 | `POST` | `/api/inference/detect` | Standalone single-image anomaly candidate proposal |
 | `GET` | `/api/demo/samples` | List curated benchmark sonar swaths |
 | `POST` | `/api/demo/load/{sample_id}` | Load and analyze a benchmark swath |
+
+### Ocean Drift Intelligence Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/drift/predict` | Calculate 24h/48h/72h Lagrangian drift forecast, uncertainty cones, and retention |
+| `GET` | `/api/drift/forecasts/{forecast_id}` | Retrieve detailed forecast record with GeoJSON trajectory & dispersion polygons |
+| `GET` | `/api/drift/forecasts/contact/{contact_id}` | Retrieve all computed drift trajectories for a specific sonar contact |
+| `GET` | `/api/drift/models/comparison` | Benchmark comparison across Physics, GRU, and LSTM models |
+| `GET` | `/api/drift/data-status` | Oceanographic data provenance check (Copernicus GLORYS12V1 & INCOIS LAS) |
 
 ---
 

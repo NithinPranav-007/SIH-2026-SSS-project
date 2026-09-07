@@ -1,0 +1,4 @@
+Model,Status,Version,24h MAE (km),24h RMSE (km),48h MAE (km),48h RMSE (km),72h MAE (km),72h RMSE (km)
+PHYSICS,champion,glorys12v1-rk2-v1,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data
+PHYSICS_GRU,candidate,gru-residual-v1,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data
+PHYSICS_LSTM,candidate,lstm-residual-v1,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data,Insufficient Data

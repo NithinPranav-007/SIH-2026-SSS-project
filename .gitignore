@@ -112,6 +112,24 @@ frontend-new/coverage/
 outputs/*
 outputs/**/*
 !outputs/.gitkeep
+!outputs/drift/
+!outputs/drift/**
+
+# ---- Ocean & Drift Datasets (raw & large NetCDF / GRIB) ----
+*.nc
+*.nc4
+*.grib
+*.grib2
+*.zarr/
+data/ocean/*/raw/*
+!data/ocean/*/raw/.gitkeep
+data/ocean/*/processed/*
+!data/ocean/*/processed/.gitkeep
+data/ocean/drift/features/*
+!data/ocean/drift/features/.gitkeep
+outputs/drift/runs/*
+drift_forecasting_dataset/*.nc
+
 
 # ---- Docker ----
 .docker/

@@ -29,7 +29,6 @@ class TrackObservation:
 
 
 try:
-    from backend.app.core.config import settings
     _DEFAULT_PING_GAP = int(os.getenv("TRACK_MAX_PING_GAP", "40"))
     _DEFAULT_X_OVERLAP = float(os.getenv("TRACK_MIN_X_OVERLAP", "0.25"))
     _DEFAULT_IOU_ASSOC = float(os.getenv("TRACK_IOU_ASSOC", "0.20"))

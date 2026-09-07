@@ -7,7 +7,6 @@ enhanced preview counterparts for side-by-side inspection in the viewer.
 
 import os
 import logging
-import shutil
 import cv2
 import numpy as np
 

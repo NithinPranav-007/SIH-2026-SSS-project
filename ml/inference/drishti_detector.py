@@ -22,7 +22,7 @@ import torch
 
 logger = logging.getLogger(__name__)
 
-from ml.preprocessing.drishti_preprocess import drishti_preprocess, PREPROCESSING_VERSION
+from ml.preprocessing.drishti_preprocess import drishti_preprocess
 from backend.app.core.config import settings
 
 
@@ -206,10 +206,10 @@ class DrishtiDetector:
         try:
             from backend.app.api.demo import DEMO_PREVIEW_CONTACTS
             for key, contacts in DEMO_PREVIEW_CONTACTS.items():
-                if (key in tid_lower or 
-                    (key == "viator_04" and "viator" in tid_lower) or 
-                    (key == "corsican_02" and "corsican" in tid_lower) or 
-                    (key == "artificial_reef_02" and "reef" in tid_lower) or 
+                if (key in tid_lower or
+                    (key == "viator_04" and "viator" in tid_lower) or
+                    (key == "corsican_02" and "corsican" in tid_lower) or
+                    (key == "artificial_reef_02" and "reef" in tid_lower) or
                     (key == "survey_001" and "survey_001" in tid_lower)):
                     for c in contacts:
                         gx1, gy1, gx2, gy2 = c["bbox"]

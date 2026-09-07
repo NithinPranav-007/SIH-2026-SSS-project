@@ -16,7 +16,7 @@ import json
 import time
 import shutil
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 import cv2
 import numpy as np
 import torch

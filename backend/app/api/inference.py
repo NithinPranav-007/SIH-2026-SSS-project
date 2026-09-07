@@ -13,7 +13,6 @@ from fastapi import APIRouter, File, UploadFile, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from ml.inference.drishti_detector import DrishtiDetector
-from backend.app.core.config import settings
 
 router = APIRouter(prefix="/api/inference", tags=["Inference"])
 

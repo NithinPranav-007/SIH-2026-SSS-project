@@ -10,7 +10,6 @@ Supports:
 3. Quality attenuation: low image quality scales confidence towards conservative bounds
 """
 
-from typing import Optional
 import numpy as np
 
 

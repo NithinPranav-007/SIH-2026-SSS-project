@@ -9,12 +9,11 @@ This script compiles candidate training sets for offline evaluation.
 It NEVER directly modifies production weights or auto-deploys models.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 import os
-import shutil
 import logging
 from sqlalchemy.orm import Session
-from backend.app.database.models import ContactModel, SurveyModel, TrainingSampleModel
+from backend.app.database.models import ContactModel, SurveyModel
 
 logger = logging.getLogger(__name__)
 

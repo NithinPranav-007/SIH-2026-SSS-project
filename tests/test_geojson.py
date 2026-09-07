@@ -2,7 +2,6 @@
 Unit Tests for GeoJSON and CSV Export Utilities.
 """
 
-import pytest
 import csv
 import io
 from backend.app.utils.geojson import contacts_to_geojson, contacts_to_csv_string

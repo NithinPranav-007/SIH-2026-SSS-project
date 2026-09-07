@@ -14,7 +14,7 @@ SCIENTIFIC / DOMAIN HONESTY RULES:
    entanglements, ordnance/unexploded explosive hazards, and high-confidence debris.
 """
 
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional
 
 
 try:

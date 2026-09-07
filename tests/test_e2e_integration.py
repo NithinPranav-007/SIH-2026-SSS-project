@@ -11,7 +11,6 @@ Tests full lifecycle across:
 - AI Natural Language Sonar Analyst queries
 """
 
-import os
 from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient

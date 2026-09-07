@@ -6,7 +6,6 @@ Supports:
 - Resilient fallback to SQLite if PostgreSQL is offline or unconfigured
 """
 
-import os
 import logging
 
 logger = logging.getLogger(__name__)
@@ -63,11 +62,11 @@ def init_db() -> None:
     try:
         from backend.app.database import models  # noqa: F401 — import triggers model registration
         Base.metadata.create_all(bind=engine)
-        
+
         # Safe additive migrations for SQLite/PostgreSQL
         from sqlalchemy import text, inspect
         inspector = inspect(engine)
-        
+
         # Check contacts table
         if "contacts" in inspector.get_table_names():
             existing_cols = {c["name"] for c in inspector.get_columns("contacts")}

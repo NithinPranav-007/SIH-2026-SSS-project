@@ -6,7 +6,7 @@ GET /api/contacts/{contact_id}
 """
 
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from backend.app.database.connection import get_db

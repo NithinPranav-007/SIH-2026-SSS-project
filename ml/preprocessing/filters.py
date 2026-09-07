@@ -4,7 +4,6 @@ Acoustic Image Filtering Module for Side-Scan Sonar.
 Implements the Lee speckle noise filter for sonar backscatter imagery.
 """
 
-from typing import Union
 import cv2
 import numpy as np
 

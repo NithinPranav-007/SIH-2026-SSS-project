@@ -4,7 +4,7 @@ Resurvey Recommendations API Router.
 GET /api/resurvey/recommendations
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

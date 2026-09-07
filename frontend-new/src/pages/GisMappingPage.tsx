@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Contact, NavWaypoint, SurveyUploadResponse } from '../types/detection';
+import { DriftForecastDetail } from '../types/drift';
+import { apiService } from '../services/api';
 import { MapView } from '../components/map/MapView';
 import { 
   Compass, 
@@ -11,7 +13,11 @@ import {
   Waves, 
   Scan,
   ShieldCheck,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  Navigation,
+  Activity,
+  Flame
 } from 'lucide-react';
 
 interface GisMappingPageProps {
@@ -36,6 +42,9 @@ export const GisMappingPage: React.FC<GisMappingPageProps> = ({
   onExportGeoJSON
 }) => {
   const [filterMode, setFilterMode] = useState<'all' | 'high' | 'confirmed'>('all');
+  const [driftForecast, setDriftForecast] = useState<DriftForecastDetail | null>(null);
+  const [showDriftLayer, setShowDriftLayer] = useState<boolean>(true);
+  const [loadingForecast, setLoadingForecast] = useState<boolean>(false);
 
   const filteredContacts = contacts.filter(c => {
     if (filterMode === 'high') return c.priority === 'HIGH';
@@ -44,6 +53,54 @@ export const GisMappingPage: React.FC<GisMappingPageProps> = ({
   });
 
   const activeContact = selectedContact || filteredContacts[0] || null;
+
+  // Fetch or auto-predict drift forecast when active contact changes
+  useEffect(() => {
+    let isMounted = true;
+    if (!activeContact) {
+      setDriftForecast(null);
+      return;
+    }
+
+    const loadForecast = async () => {
+      try {
+        const existing = await apiService.getContactDriftForecasts(activeContact.contact_id);
+        if (isMounted && existing && existing.length > 0) {
+          const detail = await apiService.getDriftForecast(existing[0].forecast_id);
+          if (isMounted) setDriftForecast(detail);
+        } else {
+          if (isMounted) setDriftForecast(null);
+        }
+      } catch (err) {
+        if (isMounted) setDriftForecast(null);
+      }
+    };
+
+    loadForecast();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeContact?.contact_id]);
+
+  const handleComputeDrift = async () => {
+    if (!activeContact) return;
+    setLoadingForecast(true);
+    try {
+      const res = await apiService.predictDrift({
+        contact_id: activeContact.contact_id,
+        latitude: activeContact.latitude || undefined,
+        longitude: activeContact.longitude || undefined,
+        horizon_hours: 72,
+        model_preference: 'CHAMPION'
+      });
+      setDriftForecast(res);
+      setShowDriftLayer(true);
+    } catch (err) {
+      console.warn('Failed to compute drift in GIS view:', err);
+    } finally {
+      setLoadingForecast(false);
+    }
+  };
 
   return (
     <div className="p-6 lg:p-8 max-w-[1700px] mx-auto space-y-6 font-sans">
@@ -117,15 +174,31 @@ export const GisMappingPage: React.FC<GisMappingPageProps> = ({
         
         {/* Vector Nautical Map Canvas (8 Cols) */}
         <div className="lg:col-span-8 bg-white rounded-[24px] border border-[#e6e6e6] shadow-soft overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-[#e6e6e6] bg-[#fcfcfc] flex items-center justify-between text-xs font-sans">
+          <div className="p-4 border-b border-[#e6e6e6] bg-[#fcfcfc] flex flex-wrap items-center justify-between gap-3 text-xs font-sans">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="font-bold text-[#1f1f1f]">MapLibre GL Nautical GIS</span>
               <span className="text-[#8e8e93]">• Bathymetric Ocean Contours & PostGIS Trajectory</span>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-white border border-[#e6e6e6] text-[#8e8e93]">
-              Datum: WGS-84 (EPSG:4326)
-            </span>
+            
+            <div className="flex items-center gap-2">
+              {driftForecast && (
+                <button
+                  onClick={() => setShowDriftLayer(!showDriftLayer)}
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
+                    showDriftLayer
+                      ? 'bg-cyan-600 text-white border-cyan-600 shadow-sm'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <Waves className="w-3.5 h-3.5" />
+                  Drift Trajectory ({showDriftLayer ? 'Active' : 'Hidden'})
+                </button>
+              )}
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-white border border-[#e6e6e6] text-[#8e8e93]">
+                Datum: WGS-84 (EPSG:4326)
+              </span>
+            </div>
           </div>
 
           <div className="flex-1 w-full min-h-[550px] relative bg-[#050a14]">
@@ -134,6 +207,7 @@ export const GisMappingPage: React.FC<GisMappingPageProps> = ({
               selectedContact={activeContact}
               navTrack={navTrack}
               onSelectContact={onSelectContact}
+              driftForecast={showDriftLayer ? driftForecast : null}
             />
           </div>
         </div>
@@ -194,6 +268,53 @@ export const GisMappingPage: React.FC<GisMappingPageProps> = ({
                   <span className="font-bold text-[#ff383c] font-mono">{activeContact.review_status}</span>
                 </div>
               </div>
+
+              {/* Ocean Drift Telemetry & Action Card */}
+              {driftForecast ? (
+                <div className="p-4 rounded-2xl bg-cyan-50/60 border border-cyan-200/80 space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-cyan-800 uppercase tracking-wider flex items-center gap-1.5">
+                      <Waves className="w-3.5 h-3.5 text-cyan-600" />
+                      Lagrangian Drift (72h)
+                    </span>
+                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-cyan-200/60 text-cyan-900 font-bold">
+                      {driftForecast.model_name}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-slate-700">
+                    <div>
+                      <div className="text-[10px] text-slate-400">72h Displacement</div>
+                      <div className="font-bold font-mono text-cyan-900">
+                        {driftForecast.milestones['72h']?.distance_km?.toFixed(1) || '0.0'} km
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400">Uncertainty Cone</div>
+                      <div className="font-bold font-mono text-amber-700">
+                        ±{driftForecast.milestones['72h']?.uncertainty_radius_km?.toFixed(1) || '0.0'} km
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-cyan-100 flex items-center justify-between text-[11px]">
+                    <span className="text-slate-500">Hotspot Retention:</span>
+                    <span className="font-bold font-mono text-amber-600 flex items-center gap-1">
+                      <Flame className="w-3 h-3" />
+                      {driftForecast.hotspot_score} / 100
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={handleComputeDrift}
+                  disabled={loadingForecast}
+                  className="w-full py-2.5 px-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-2xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {loadingForecast ? 'Integrating Currents...' : 'Compute 72h Drift Trajectory'}
+                </button>
+              )}
 
               {/* Navigation Action Buttons */}
               <div className="space-y-2.5 pt-2 border-t border-[#f2f2f2]">

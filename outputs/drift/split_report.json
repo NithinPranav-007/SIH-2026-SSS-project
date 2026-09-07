@@ -1,0 +1,17 @@
+{
+  "is_leak_free": false,
+  "split_method": "Trajectory ID & Platform Partitioning",
+  "train_trajectory_count": 3,
+  "val_trajectory_count": 2,
+  "test_trajectory_count": 2,
+  "id_overlap": {
+    "train_val_overlap": [
+      "TRK_02"
+    ],
+    "train_test_overlap": [],
+    "val_test_overlap": []
+  },
+  "temporal_overlap_detected": false,
+  "temporal_notes": "No future temporal leakage detected.",
+  "status": "FAILED_LEAKAGE_DETECTED"
+}

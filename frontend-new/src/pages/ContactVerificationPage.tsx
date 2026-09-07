@@ -17,6 +17,7 @@ import {
   ArrowRight,
   Keyboard
 } from 'lucide-react';
+import { DriftPredictionPanel } from '../components/drift/DriftPredictionPanel';
 
 interface ContactVerificationPageProps {
   survey: SurveyUploadResponse | null;
@@ -456,6 +457,14 @@ export const ContactVerificationPage: React.FC<ContactVerificationPageProps> = (
               </div>
             </div>
           </div>
+
+          {/* Ocean Intelligence & Ghost Net Drift Forecasting Panel */}
+          {activeContact && (
+            <DriftPredictionPanel
+              contact={activeContact}
+              onNavigateToMap={onNavigateToMap}
+            />
+          )}
 
           {/* One-Click Operator Triage Actions Card */}
           <div className="bg-[var(--color-surface)] rounded-[24px] border border-[var(--color-border)] p-6 shadow-soft space-y-5">

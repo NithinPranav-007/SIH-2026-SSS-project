@@ -3,7 +3,6 @@ Tests for ML Sonar Normalization, Quality Checks, and Acoustic Context Pipeline.
 """
 
 import numpy as np
-import pytest
 from ml.preprocessing.normalize import normalize_sonar_intensity, apply_clahe, handle_water_column
 from ml.preprocessing.quality import compute_image_quality
 from ml.preprocessing.tiling import generate_tiles, map_tile_bbox_to_global

@@ -3,7 +3,6 @@ Unit Tests for SurveyRepository and ContactRepository.
 Uses SQLite in-memory via conftest.py session fixture.
 """
 
-import pytest
 from backend.app.database.repository import SurveyRepository, ContactRepository
 from backend.app.schemas.contact import Contact, BoundingBox
 

@@ -18,7 +18,6 @@ import os
 import sys
 import json
 import subprocess
-import shutil
 from pathlib import Path
 import torch
 
@@ -635,7 +634,7 @@ The model was selected strictly using validation fold metrics. The test set was 
     print("BASELINE TRAINING COMPLETE")
     print("=" * 50 + "\n")
     print(f"GPU:         {device_name} ({total_vram_gb:.2f} GB)")
-    print(f"Model:       YOLOv8n Baseline")
+    print("Model:       YOLOv8n Baseline")
     print(f"Duration:    {actual_train_duration_sec / 60:.2f} minutes")
     print(f"Best Epoch:  {best_epoch}")
     print(f"Best Weight: {best_weight}\n")

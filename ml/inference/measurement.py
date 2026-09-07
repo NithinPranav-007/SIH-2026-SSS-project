@@ -18,7 +18,6 @@ with LOW confidence. Values are never fabricated.
 """
 
 from typing import Dict, Any, Optional
-import numpy as np
 
 
 class TargetMeasurer:
@@ -62,7 +61,7 @@ class TargetMeasurer:
         nadir_dist_px = float(context.get("distance_from_nadir", 0.0))
 
         has_geo = localization_status in ("VERIFIED", "ESTIMATED")
-        
+
         if has_geo or pixel_resolution_m is not None:
             m_per_px_x = pixel_resolution_m or self.default_cross_track_res
             m_per_px_y = pixel_resolution_m or self.default_along_track_res

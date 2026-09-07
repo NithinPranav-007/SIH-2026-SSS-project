@@ -7,7 +7,6 @@ import datetime
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 
 from backend.app.core.logging_config import configure_logging
 from backend.app.database.connection import init_db
@@ -25,6 +24,7 @@ from backend.app.api.anomalies import router as anomalies_router
 from backend.app.api.active_learning import router as active_learning_router
 from backend.app.api.analyst import router as analyst_router
 from backend.app.api.resurvey import router as resurvey_router
+from backend.app.api.drift import router as drift_router
 
 from contextlib import asynccontextmanager
 
@@ -59,7 +59,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from fastapi import Request, Response
+from fastapi import Request
 from fastapi.responses import JSONResponse
 import time
 
@@ -95,6 +95,7 @@ app.include_router(anomalies_router)
 app.include_router(active_learning_router)
 app.include_router(analyst_router)
 app.include_router(resurvey_router)
+app.include_router(drift_router)
 
 # Mount static demo/data directories if they exist
 os.makedirs("data/raw", exist_ok=True)

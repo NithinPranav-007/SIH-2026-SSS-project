@@ -9,7 +9,7 @@ Preprocess Version: drishti-prep-v1
 CRITICAL RULE: Never modify the original raw image array.
 """
 
-from typing import Dict, Any, Tuple, Optional, Union
+from typing import Dict, Any, Tuple
 import cv2
 import numpy as np
 from ml.preprocessing.filters import apply_lee_filter

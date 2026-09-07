@@ -4,7 +4,7 @@ Human-in-the-Loop Review API Endpoint.
 POST /api/contacts/{contact_id}/review
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from backend.app.database.connection import get_db

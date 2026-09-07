@@ -1,0 +1,139 @@
+{
+  "feature_pipeline_version": "drift-features-v1",
+  "sequence_length_timesteps": 24,
+  "total_feature_count": 19,
+  "features_active": [
+    {
+      "name": "relative_east_m",
+      "description": "Relative East displacement in tangent plane (meters)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "relative_north_m",
+      "description": "Relative North displacement in tangent plane (meters)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "velocity_east_ms",
+      "description": "Observed eastward drift velocity (m/s)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "velocity_north_ms",
+      "description": "Observed northward drift velocity (m/s)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "acceleration_east_ms2",
+      "description": "Eastward acceleration (m/s^2)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "acceleration_north_ms2",
+      "description": "Northward acceleration (m/s^2)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "speed_ms",
+      "description": "Scalar drift speed (m/s)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "heading_sin",
+      "description": "Sine of drift heading angle",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "heading_cos",
+      "description": "Cosine of drift heading angle",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "ocean_uo",
+      "description": "Copernicus eastward ocean current uo (m/s)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "ocean_vo",
+      "description": "Copernicus northward ocean current vo (m/s)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "ocean_temperature",
+      "description": "Copernicus potential temperature thetao (\u00b0C)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "ocean_salinity",
+      "description": "Copernicus salinity so (psu)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "ocean_zos",
+      "description": "Copernicus sea surface height zos (m)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "ocean_mlotst",
+      "description": "Copernicus mixed layer thickness mlotst (m)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "hour_sin",
+      "description": "Diurnal cyclic encoding sin(2*pi*hour/24)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "hour_cos",
+      "description": "Diurnal cyclic encoding cos(2*pi*hour/24)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "doy_sin",
+      "description": "Annual cyclic encoding sin(2*pi*doy/365)",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "doy_cos",
+      "description": "Annual cyclic encoding cos(2*pi*doy/365)",
+      "status": "ACTIVE"
+    }
+  ],
+  "features_unavailable": [
+    {
+      "name": "wind_u",
+      "status": "UNAVAILABLE",
+      "reason": "Not present in Copernicus GLOBAL_MULTIYEAR_PHY_001_030 or INCOIS LAS listing. Strictly excluded from model inputs to prevent hallucination."
+    },
+    {
+      "name": "wind_v",
+      "status": "UNAVAILABLE",
+      "reason": "Not present in Copernicus GLOBAL_MULTIYEAR_PHY_001_030 or INCOIS LAS listing. Strictly excluded from model inputs to prevent hallucination."
+    },
+    {
+      "name": "wave_height",
+      "status": "UNAVAILABLE",
+      "reason": "Not present in Copernicus GLOBAL_MULTIYEAR_PHY_001_030 or INCOIS LAS listing. Strictly excluded from model inputs to prevent hallucination."
+    },
+    {
+      "name": "wave_period",
+      "status": "UNAVAILABLE",
+      "reason": "Not present in Copernicus GLOBAL_MULTIYEAR_PHY_001_030 or INCOIS LAS listing. Strictly excluded from model inputs to prevent hallucination."
+    }
+  ],
+  "target_representation": "Local Tangent Plane Coordinates (East, North) in meters",
+  "target_horizons": [
+    24,
+    48,
+    72
+  ],
+  "target_variables": [
+    "delta_east_24h_m",
+    "delta_north_24h_m",
+    "delta_east_48h_m",
+    "delta_north_48h_m",
+    "delta_east_72h_m",
+    "delta_north_72h_m"
+  ],
+  "generated_at": "2026-09-07T17:56:24.269746"
+}

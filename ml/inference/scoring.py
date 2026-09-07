@@ -19,7 +19,7 @@ Terminology is strictly 'Priority Score', never 'Probability of Ghost Net'
 or 'Probability of Debris'. This score is an operational triage metric.
 """
 
-from typing import Dict, Any, Tuple
+from typing import Tuple
 
 
 try:

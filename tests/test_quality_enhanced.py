@@ -3,8 +3,7 @@ Tests for Enhanced Sonar Quality Assessment.
 """
 
 import numpy as np
-import pytest
-from ml.preprocessing.quality import compute_image_quality, SonarQualityReport
+from ml.preprocessing.quality import compute_image_quality
 
 
 def test_quality_empty_image():

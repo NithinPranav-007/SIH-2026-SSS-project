@@ -3,7 +3,6 @@ Tests for 37-Dimensional Contact Embeddings (ContactEmbedder).
 """
 
 import numpy as np
-import pytest
 from ml.inference.embedding import ContactEmbedder
 
 

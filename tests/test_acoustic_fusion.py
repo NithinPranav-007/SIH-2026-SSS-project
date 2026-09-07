@@ -3,7 +3,6 @@ Tests for Acoustic Fusion Model.
 """
 
 import numpy as np
-import pytest
 from ml.inference.acoustic_fusion import AcousticFusionModel
 
 

@@ -13,7 +13,6 @@ overwrite or update the active production model stack.
 """
 
 from typing import List, Dict, Any, Optional
-import os
 import datetime
 import logging
 from sqlalchemy.orm import Session

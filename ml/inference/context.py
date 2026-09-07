@@ -22,7 +22,7 @@ may legitimately exhibit minimal shadow. Candidates are evaluated with graded
 evidence without binary rejection.
 """
 
-from typing import Dict, Any, Tuple
+from typing import Dict, Any
 import numpy as np
 import cv2
 

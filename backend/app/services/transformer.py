@@ -11,7 +11,7 @@ Enforces:
 - Zero geographic coordinate fabrication (None when navigation is unavailable)
 """
 
-from typing import List, Optional, Tuple, Dict, Any
+from typing import List, Optional, Any
 from datetime import datetime, timezone
 
 from ml.inference.drishti_detector import DrishtiDetection

@@ -2,14 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Contact, NavWaypoint } from '../../types/detection';
-import { Layers, Compass, ZoomIn, ZoomOut, Maximize2, Anchor, Eye } from 'lucide-react';
+import { DriftForecastDetail } from '../../types/drift';
+import { DriftLayer } from './DriftLayer';
+import { Layers, Compass, ZoomIn, ZoomOut, Maximize2, Anchor, Eye, Waves } from 'lucide-react';
 
 interface MapViewProps {
   contacts: Contact[];
   selectedContact: Contact | null;
   navTrack: NavWaypoint[];
   onSelectContact: (contact: Contact) => void;
+  driftForecast?: DriftForecastDetail | null;
 }
+
 
 // Public, high-resolution tile sources with ZERO watermark & NO API KEY needed
 const BASEMAP_STYLES = {
@@ -53,7 +57,8 @@ export const MapView: React.FC<MapViewProps> = ({
   contacts,
   selectedContact,
   navTrack,
-  onSelectContact
+  onSelectContact,
+  driftForecast
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<maplibregl.Map | null>(null);
@@ -63,6 +68,8 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showLayerMenu, setShowLayerMenu] = useState<boolean>(false);
   const [showTrackline, setShowTrackline] = useState<boolean>(true);
   const [showTargets, setShowTargets] = useState<boolean>(true);
+  const [showDrift, setShowDrift] = useState<boolean>(true);
+  const [showUncertainty, setShowUncertainty] = useState<boolean>(true);
 
   // Default coordinate center (Baltic/North Sea or Coastal coordinates)
   const defaultCenter: [number, number] = [12.6789, 54.1234];
@@ -394,6 +401,14 @@ export const MapView: React.FC<MapViewProps> = ({
     <div className="w-full h-full relative overflow-hidden rounded-[20px] border border-[#e6e6e6] bg-[#0c121e]">
       <div ref={mapContainer} className="w-full h-full" />
 
+      {/* Drift Trajectory & Uncertainty Layer */}
+      <DriftLayer
+        map={mapInstance.current}
+        forecast={driftForecast || null}
+        visible={showDrift}
+        showUncertainty={showUncertainty}
+      />
+
       {/* Top Left: Basemap Switcher & Layer Controls */}
       <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
         <div className="relative">
@@ -451,10 +466,37 @@ export const MapView: React.FC<MapViewProps> = ({
                     {showTargets ? 'ON' : 'OFF'}
                   </span>
                 </button>
+
+                <button
+                  onClick={() => setShowDrift(!showDrift)}
+                  className="w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center justify-between hover:bg-slate-50 text-[#1f1f1f] cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-[#00d2ff] rounded-full inline-block" />
+                    Ghost Net Drift (72h)
+                  </span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${showDrift ? 'bg-cyan-100 text-cyan-700' : 'bg-slate-100 text-slate-500'}`}>
+                    {showDrift ? 'ON' : 'OFF'}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setShowUncertainty(!showUncertainty)}
+                  className="w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center justify-between hover:bg-slate-50 text-[#1f1f1f] cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-[#f59e0b] rounded-full inline-block" />
+                    Uncertainty Buffers
+                  </span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${showUncertainty ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'}`}>
+                    {showUncertainty ? 'ON' : 'OFF'}
+                  </span>
+                </button>
               </div>
             </div>
           )}
         </div>
+
 
         {/* Recenter button */}
         <button

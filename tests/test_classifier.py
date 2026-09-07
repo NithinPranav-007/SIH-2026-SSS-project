@@ -2,8 +2,6 @@
 Tests for SonarCropClassifier (Second-Stage FP Reduction).
 """
 
-import numpy as np
-import pytest
 from ml.inference.classifier import SonarCropClassifier
 
 

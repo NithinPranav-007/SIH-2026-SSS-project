@@ -14,7 +14,6 @@ import re
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
 
 from backend.app.database.connection import get_db
 from backend.app.database.models import ContactModel

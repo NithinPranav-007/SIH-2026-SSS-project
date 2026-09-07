@@ -23,7 +23,7 @@ Outputs:
 - feature_importance: dict of relative feature contributions
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any
 import numpy as np
 
 
@@ -58,7 +58,6 @@ class AcousticFusionModel:
     def _try_load_sklearn_model(self):
         """Initializes or loads pre-trained model if available."""
         try:
-            from sklearn.ensemble import GradientBoostingClassifier
             # Ready for trained weights; initialized as None until trained
             self.model = None
         except Exception:

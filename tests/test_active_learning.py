@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database.connection import Base
-from backend.app.database.models import ContactModel, SurveyModel, TrainingSampleModel
+from backend.app.database.models import ContactModel, SurveyModel
 from backend.app.services.active_learning_service import ActiveLearningService
 
 

@@ -13,7 +13,7 @@ Recommendations are ranked with transparent rationales.
 
 from typing import List, Dict, Any
 from sqlalchemy.orm import Session
-from backend.app.database.models import SurveyModel, ContactModel
+from backend.app.database.models import SurveyModel
 
 
 class ResurveyService:

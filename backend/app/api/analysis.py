@@ -7,7 +7,7 @@ POST /api/surveys/{survey_id}/analyze
 import time
 import os
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 

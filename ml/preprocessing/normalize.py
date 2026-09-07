@@ -7,7 +7,7 @@ Responsibilities:
 - Contrast-Limited Adaptive Histogram Equalization (CLAHE)
 """
 
-from typing import Optional, Tuple
+from typing import Tuple
 import numpy as np
 import cv2
 

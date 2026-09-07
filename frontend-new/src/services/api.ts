@@ -157,5 +157,44 @@ export const apiService = {
     const response = await client.get(`/api/resurvey/recommendations/${surveyId}`);
     return response.data;
   },
+
+  // ---- Ocean Drift Intelligence Endpoints ----
+
+  async getDriftDataStatus(): Promise<any> {
+    const response = await client.get('/api/drift/data-status');
+    return response.data;
+  },
+
+  async predictDrift(params: {
+    contact_id?: string;
+    latitude?: number;
+    longitude?: number;
+    horizon_hours?: number;
+    model_preference?: string;
+  }): Promise<any> {
+    const response = await client.post('/api/drift/predict', params);
+    return response.data;
+  },
+
+  async getDriftForecast(forecastId: string): Promise<any> {
+    const response = await client.get(`/api/drift/${forecastId}`);
+    return response.data;
+  },
+
+  async getContactDriftForecasts(contactId: string): Promise<any[]> {
+    const response = await client.get(`/api/contacts/${contactId}/drift`);
+    return response.data;
+  },
+
+  async getDriftModels(): Promise<any> {
+    const response = await client.get('/api/drift/models');
+    return response.data;
+  },
+
+  async getDriftMetrics(): Promise<any> {
+    const response = await client.get('/api/drift/metrics');
+    return response.data;
+  },
 };
+
 

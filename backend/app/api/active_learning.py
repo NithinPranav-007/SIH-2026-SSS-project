@@ -5,7 +5,7 @@ GET  /api/active-learning/samples
 POST /api/active-learning/export
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

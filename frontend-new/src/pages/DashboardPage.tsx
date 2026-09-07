@@ -37,14 +37,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   onCustomUploadClick
 }) => {
   const [stats, setStats] = useState<any>(null);
+  const [driftStatus, setDriftStatus] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeHoverBar, setActiveHoverBar] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await apiService.getDashboardStats();
-        setStats(res);
+        const [dashRes, driftRes] = await Promise.allSettled([
+          apiService.getDashboardStats(),
+          apiService.getDriftDataStatus(),
+        ]);
+        if (dashRes.status === 'fulfilled') setStats(dashRes.value);
+        if (driftRes.status === 'fulfilled') setDriftStatus(driftRes.value);
       } catch (err) {
         console.warn('Dashboard stats error:', err);
       } finally {
@@ -199,6 +204,60 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           trend={{ value: 'Online Sync', isUp: true }}
           onClick={() => onSelectScreen('gis-mapping')}
         />
+      </section>
+
+      {/* Ocean Intelligence & Lagrangian Drift System Status Banner */}
+      <section className="bg-gradient-to-r from-slate-900 via-slate-950 to-cyan-950 text-white rounded-[24px] p-6 lg:p-7 border border-cyan-900/40 shadow-soft">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold tracking-wider uppercase font-sans">
+                <Waves className="w-3 h-3 text-cyan-400" />
+                Physical Oceanography Active
+              </span>
+              <span className="text-xs text-slate-400">•</span>
+              <span className="text-xs text-slate-300 font-mono">
+                Copernicus GLORYS12V1 (0.083° Grid)
+              </span>
+            </div>
+            <h3 className="text-lg lg:text-xl font-bold tracking-tight text-white font-display">
+              Ghost Net Drift Forecasting & Subsurface Circulation
+            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              4th-Order Runge-Kutta hydrodynamic advection with empirical uncertainty dispersion cones. Real-world drifter tracking data rigorously audited under zero-fabrication protocol.
+            </p>
+          </div>
+
+          {/* Quick Metrics Strip */}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl px-4 py-2.5 text-center min-w-[120px]">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Champion Model</div>
+              <div className="text-xs font-extrabold text-cyan-400 font-mono mt-0.5">PHYSICS (RK2)</div>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl px-4 py-2.5 text-center min-w-[120px]">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Ocean Mode</div>
+              <div className="text-xs font-extrabold text-white font-mono mt-0.5">
+                {driftStatus?.copernicus?.drift_mode || 'SURFACE (0.494m)'}
+              </div>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700/60 rounded-2xl px-4 py-2.5 text-center min-w-[140px]">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Training Status</div>
+              <div className="text-xs font-extrabold text-amber-400 font-mono mt-0.5">
+                INSUFFICIENT DATA
+              </div>
+            </div>
+
+            <button
+              onClick={() => onSelectScreen('contact-verification')}
+              className="px-4 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-2xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>Forecast Drift</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* 3. Multi-Column Analytics: Swath Density & Operator Audit Log */}

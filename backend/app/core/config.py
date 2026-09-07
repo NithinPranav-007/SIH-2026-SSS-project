@@ -55,7 +55,7 @@ class DatabaseConfig:
     CONNECT_TIMEOUT: int = int(os.getenv("DB_CONNECT_TIMEOUT", "2"))
     POOL_PRE_PING: bool = os.getenv("DB_POOL_PRE_PING", "false").lower() in ("true", "1", "yes")
     SQLITE_FALLBACK_NAME: str = "sonar_intel_fallback.db"
-    
+
     @property
     def fallback_path(self) -> str:
         return str(BASE_DIR / self.SQLITE_FALLBACK_NAME)
@@ -66,11 +66,11 @@ class SonarConfig:
     IMAGE_SIZE: int = int(os.getenv("IMAGE_SIZE", "640"))
     TILE_SIZE: int = int(os.getenv("TILE_SIZE", "640"))
     TILE_OVERLAP: float = float(os.getenv("TILE_OVERLAP", "0.20"))
-    
+
     PREPROCESSING_VERSION: str = os.getenv("PREPROCESSING_VERSION", "drishti-prep-v1")
     PREPROCESSING_SPECKLE_FILTER: str = os.getenv("PREPROCESSING_SPECKLE_FILTER", "lee")
     PREPROCESSING_CLAHE: bool = os.getenv("PREPROCESSING_CLAHE", "true").lower() in ("true", "1", "yes")
-    
+
     LEE_WINDOW_SIZE: int = int(os.getenv("LEE_WINDOW_SIZE", "5"))
     LEE_NOISE_VAR: float = float(os.getenv("LEE_NOISE_VAR", "0.04"))
     CLAHE_CLIP_LIMIT: float = float(os.getenv("CLAHE_CLIP_LIMIT", "2.0"))
@@ -141,7 +141,7 @@ class ScoringConfig:
     W_CONTEXT: float = float(os.getenv("SCORING_CONTEXT_WEIGHT", "0.25"))
     W_QUALITY: float = float(os.getenv("SCORING_QUALITY_WEIGHT", "0.15"))
     W_LOCALIZATION: float = float(os.getenv("SCORING_LOCALIZATION_WEIGHT", "0.10"))
-    
+
     HIGH_THRESHOLD: float = float(os.getenv("SCORING_HIGH_THRESHOLD", "0.72"))
     MEDIUM_THRESHOLD: float = float(os.getenv("SCORING_MEDIUM_THRESHOLD", "0.48"))
 
@@ -151,7 +151,7 @@ class RiskConfig:
     CRITICAL_THRESHOLD: float = float(os.getenv("RISK_CRITICAL_THRESHOLD", "80.0"))
     HIGH_THRESHOLD: float = float(os.getenv("RISK_HIGH_THRESHOLD", "60.0"))
     MEDIUM_THRESHOLD: float = float(os.getenv("RISK_MEDIUM_THRESHOLD", "35.0"))
-    
+
     HAZARD_OBSTRUCTION_AREA_M2: float = float(os.getenv("HAZARD_OBSTRUCTION_AREA_M2", "100.0"))
     MIN_NOVELTY_ALERT: float = float(os.getenv("MIN_NOVELTY_ALERT", "40.0"))
 
@@ -179,6 +179,56 @@ class SecurityConfig:
     ALLOWED_NAV_EXTENSIONS: List[str] = [".csv", ".txt", ".nav"]
 
 
+class DriftConfig:
+    """Ocean intelligence and ghost net drift forecasting hyperparameters and paths."""
+    DRIFT_DATA_ROOT: Path = Path(os.getenv("DRIFT_DATA_ROOT", str(BASE_DIR / "data" / "ocean")))
+
+    @staticmethod
+    def _resolve_default_copernicus_path() -> str:
+        # Check standard ocean raw directory first, then fallback to initial dataset folder
+        standard_path = BASE_DIR / "data" / "ocean" / "copernicus" / "raw" / "cmems_mod_glo_phy_my_0.083deg_P1D-m_1788771128865.nc"
+        initial_path = BASE_DIR / "drift_forecasting_dataset" / "cmems_mod_glo_phy_my_0.083deg_P1D-m_1788771128865.nc"
+        if standard_path.exists():
+            return str(standard_path)
+        if initial_path.exists():
+            return str(initial_path)
+        return str(initial_path)
+
+    COPERNICUS_DATA_PATH: str = os.getenv("COPERNICUS_DATA_PATH", _resolve_default_copernicus_path())
+    INCOIS_LAS_URL: str = os.getenv(
+        "INCOIS_LAS_URL",
+        "https://las.incois.gov.in/las/output/3E501F741E424922D358B673CBA82351_ferret_listing.txt"
+    )
+    INCOIS_CACHE_PATH: Path = Path(os.getenv("INCOIS_CACHE_PATH", str(BASE_DIR / "data" / "ocean" / "incois" / "raw")))
+    INCOIS_ONLINE_MODE: bool = os.getenv("INCOIS_ONLINE_MODE", "true").lower() in ("true", "1", "yes")
+
+    ARGO_DATA_PATH: Path = Path(os.getenv("ARGO_DATA_PATH", str(BASE_DIR / "data" / "ocean" / "argo" / "raw")))
+    INSITU_DATA_PATH: Path = Path(os.getenv("INSITU_DATA_PATH", str(BASE_DIR / "data" / "ocean" / "insitu" / "raw")))
+
+    DRIFT_HISTORY_STEPS: int = int(os.getenv("DRIFT_HISTORY_STEPS", "24"))
+    DRIFT_HORIZONS: List[int] = [int(h.strip()) for h in os.getenv("DRIFT_HORIZONS", "24,48,72").split(",") if h.strip()]
+    MAX_TIME_GAP: float = float(os.getenv("MAX_TIME_GAP", "12.0"))  # hours
+    INTERPOLATION_METHOD: str = os.getenv("INTERPOLATION_METHOD", "bilinear")
+
+    # ML Hyperparameters
+    GRU_HIDDEN_SIZE: int = int(os.getenv("GRU_HIDDEN_SIZE", "64"))
+    GRU_LAYERS: int = int(os.getenv("GRU_LAYERS", "2"))
+    GRU_DROPOUT: float = float(os.getenv("GRU_DROPOUT", "0.2"))
+
+    LSTM_HIDDEN_SIZE: int = int(os.getenv("LSTM_HIDDEN_SIZE", "64"))
+    LSTM_LAYERS: int = int(os.getenv("LSTM_LAYERS", "2"))
+    LSTM_DROPOUT: float = float(os.getenv("LSTM_DROPOUT", "0.2"))
+
+    LEARNING_RATE: float = float(os.getenv("LEARNING_RATE", "0.001"))
+    BATCH_SIZE: int = int(os.getenv("BATCH_SIZE", "32"))
+    EPOCHS: int = int(os.getenv("EPOCHS", "50"))
+    EARLY_STOPPING_PATIENCE: int = int(os.getenv("EARLY_STOPPING_PATIENCE", "7"))
+    MIN_TRAJECTORIES_FOR_TRAINING: int = int(os.getenv("MIN_TRAJECTORIES_FOR_TRAINING", "10"))
+
+    OUTPUTS_DIR: Path = BASE_DIR / "outputs" / "drift"
+    MODELS_DIR: Path = BASE_DIR / "ml" / "models" / "drift"
+
+
 class Settings:
     """Unified Settings Object combining all domain categories with backwards-compatible attributes."""
     def __init__(self):
@@ -192,7 +242,8 @@ class Settings:
         self.tracking = TrackingConfig()
         self.storage = StorageConfig()
         self.security = SecurityConfig()
-        
+        self.drift = DriftConfig()
+
         # ------------------------------------------------------------------
         # Backwards Compatibility Aliases (Preserves 100% of existing imports)
         # ------------------------------------------------------------------
@@ -201,7 +252,7 @@ class Settings:
         self.MODEL_VERSION = self.detector.MODEL_VERSION
         self.MODEL_SHA256 = self.detector.MODEL_SHA256
         self.MODEL_SOURCE = self.detector.MODEL_SOURCE
-        
+
         self.IMAGE_SIZE = self.sonar.IMAGE_SIZE
         self.TILE_SIZE = self.sonar.TILE_SIZE
         self.TILE_OVERLAP = self.sonar.TILE_OVERLAP
@@ -210,7 +261,7 @@ class Settings:
         self.NMS_IOU_THRESHOLD = self.detector.NMS_IOU_THRESHOLD
         self.MIN_BOX_SIZE = self.detector.MIN_BOX_SIZE
         self.DEVICE = self.detector.DEVICE
-        
+
         self.PREPROCESSING_VERSION = self.sonar.PREPROCESSING_VERSION
         self.PREPROCESSING_SPECKLE_FILTER = self.sonar.PREPROCESSING_SPECKLE_FILTER
         self.PREPROCESSING_CLAHE = self.sonar.PREPROCESSING_CLAHE
@@ -218,7 +269,7 @@ class Settings:
         self.LEE_NOISE_VAR = self.sonar.LEE_NOISE_VAR
         self.CLAHE_CLIP_LIMIT = self.sonar.CLAHE_CLIP_LIMIT
         self.CLAHE_TILE_GRID_SIZE = self.sonar.CLAHE_TILE_GRID_SIZE
-        
+
         self.RAW_CLASSES = self.detector.RAW_CLASSES
         self.FILTERED_CLASSES = self.detector.FILTERED_CLASSES
 

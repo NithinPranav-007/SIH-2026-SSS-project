@@ -1,4 +1,4 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 *.so
@@ -19,6 +19,12 @@ data/processed/*
 data/interim/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+data/ocean/*/raw/*
+data/ocean/*/processed/*
+drift_forecasting_dataset/
+*.nc
+*.nc4
+*.grib
 
 # ML artifacts (weights mounted separately via volume)
 outputs/

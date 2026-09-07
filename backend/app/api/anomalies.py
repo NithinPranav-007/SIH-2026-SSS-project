@@ -4,7 +4,7 @@ Acoustic Anomalies API Router.
 GET /api/anomalies/unknown
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

@@ -1,0 +1,74 @@
+{
+  "source": "INCOIS_LAS",
+  "status": "AVAILABLE",
+  "source_mode": "ONLINE",
+  "endpoint_url": "https://las.incois.gov.in/las/output/3E501F741E424922D358B673CBA82351_ferret_listing.txt",
+  "dataset_name": "/home/las/datasets/argo/ValueAddedProducts.nc",
+  "product_family": "Argo Value Added Products",
+  "total_records": 2964600,
+  "columns": [
+    "DATETIME",
+    "TIME",
+    "LON",
+    "LAT",
+    "D26"
+  ],
+  "variables": {
+    "DATETIME": {
+      "name": "DATETIME",
+      "description": "Time String",
+      "units": "date_string",
+      "bad_flag": "-1.E+34",
+      "sample_valid_count": 0,
+      "sample_min": null,
+      "sample_max": null,
+      "sample_mean": null
+    },
+    "TIME": {
+      "name": "TIME",
+      "description": "Time Coordinates (DAYS since 15-JAN-1901 00:00:00)",
+      "units": "days",
+      "bad_flag": "-1.E+34",
+      "sample_valid_count": 141,
+      "sample_min": 37615.0,
+      "sample_max": 37615.0,
+      "sample_mean": 37615.0
+    },
+    "LON": {
+      "name": "LON",
+      "description": "Longitude (degrees_east)",
+      "units": "degrees_east",
+      "bad_flag": "-1.E+34",
+      "sample_valid_count": 141,
+      "sample_min": 30.5,
+      "sample_max": 119.5,
+      "sample_mean": 67.9468
+    },
+    "LAT": {
+      "name": "LAT",
+      "description": "Latitude (degrees_north)",
+      "units": "degrees_north",
+      "bad_flag": "-1.E+34",
+      "sample_valid_count": 141,
+      "sample_min": -29.5,
+      "sample_max": -28.5,
+      "sample_mean": -29.1383
+    },
+    "D26": {
+      "name": "D26",
+      "description": "Depth of 26 Isotherm (mts) (no units)",
+      "units": "m",
+      "bad_flag": "-1.E+34",
+      "sample_valid_count": 22,
+      "sample_min": 7.20928,
+      "sample_max": 37.5014,
+      "sample_mean": 24.5932
+    }
+  },
+  "spatial_coverage": "Indian Ocean Basin (Argo Array)",
+  "observation_type": "Gridded / Value Added Isotherm Depth",
+  "contains_currents_uo_vo": false,
+  "contains_winds": false,
+  "contains_waves": false,
+  "last_audited": "2026-09-07T13:33:03.661669+00:00"
+}

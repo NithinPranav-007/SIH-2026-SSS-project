@@ -16,7 +16,12 @@ import {
   Sliders,
   Filter,
   Eye,
-  Workflow
+  Workflow,
+  Waves,
+  Compass,
+  Database,
+  Flame,
+  AlertCircle
 } from 'lucide-react';
 
 export const AiPipelinePage: React.FC = () => {
@@ -184,6 +189,100 @@ export const AiPipelinePage: React.FC = () => {
           <p className="text-xs text-[#8e8e93] pt-2 border-t border-[#f2f2f2]">
             Real-time multi-tile inference on NVIDIA CUDA Tensor Cores / RTX GPUs.
           </p>
+        </div>
+      </section>
+
+      {/* Ocean Intelligence & Lagrangian Drift Pipeline Architecture */}
+      <section className="bg-white rounded-[24px] border border-slate-200 p-7 shadow-soft space-y-6 font-sans">
+        <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="section-label">Ocean Hydrodynamic Telemetry</span>
+              <span className="text-slate-300">/</span>
+              <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider font-sans">
+                Lagrangian Residual Architecture
+              </span>
+            </div>
+            <h3 className="text-xl font-extrabold text-slate-800 font-display mt-1 flex items-center gap-2">
+              <Waves className="w-5 h-5 text-cyan-500" />
+              Ghost Net Drift Forecasting & Hydrodynamic Residual Engine
+            </h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-cyan-800 bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full font-mono">
+              Mode: SURFACE_DRIFT_MODE (0.494m)
+            </span>
+          </div>
+        </div>
+
+        {/* 4-Stage Drift Pipeline Stages */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Stage 01</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">ACTIVE</span>
+            </div>
+            <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <Database className="w-4 h-4 text-cyan-600" />
+              Copernicus NetCDF
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              GLORYS12V1 0.083° daily mean fields ($uo, vo, \theta_o, S_o, \eta$). INCOIS LAS subsurface proxy connector.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Stage 02</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-100 text-cyan-800">CHAMPION</span>
+            </div>
+            <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <Compass className="w-4 h-4 text-cyan-600" />
+              Physics Advection
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              2nd & 4th-order Runge-Kutta advection with geodesic displacement $\Delta \phi, \Delta \lambda$ and diffusive cone spread.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Stage 03</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">DATA GUARD</span>
+            </div>
+            <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <Workflow className="w-4 h-4 text-amber-600" />
+              GRU / LSTM Residuals
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              PyTorch residual architectures with Huber loss. Strict Rule 0 zero-fabrication: halted pending real drifter tracks.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Stage 04</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">ACTIVE</span>
+            </div>
+            <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <Flame className="w-4 h-4 text-orange-500" />
+              Hotspot & Retention
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Eulerian convergence div(u) + zeta, mixed layer trapping and bathymetric obstacle detection for recovery.
+            </p>
+          </div>
+        </div>
+
+        {/* Scientific Transparency Alert */}
+        <div className="p-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="space-y-1 text-xs text-amber-900">
+            <span className="font-bold">Zero-Fabrication Research Policy (Scientific Ground Truth):</span>
+            <p className="text-amber-800 leading-relaxed">
+              The provided Copernicus GLORYS12V1 snapshot (<span className="font-mono font-semibold">2026-06-23</span>) provides high-resolution surface ocean velocities but contains zero in-situ drifter trajectory observations. In compliance with strict oceanographic ethics, synthetic drifter tracks are not fabricated. Deterministic Runge-Kutta physics is promoted as the operational Champion model, and machine learning residual heads will train automatically once real Lagrangian drifter trajectories are ingested.
+            </p>
+          </div>
         </div>
       </section>
 

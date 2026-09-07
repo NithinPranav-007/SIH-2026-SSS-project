@@ -2,10 +2,8 @@
 Tests for Detection to Canonical Contact Transformation Service.
 """
 
-import pytest
 from ml.inference.drishti_detector import DrishtiDetection
 from backend.app.services.transformer import transform_drishti_detections_to_contacts
-from backend.app.schemas.contact import Contact
 
 
 class TestContactTransformation:

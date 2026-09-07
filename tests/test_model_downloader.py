@@ -2,16 +2,13 @@
 Unit tests for DRISHTI Model Weights Downloader and Checksum Verification.
 """
 
-import os
 import hashlib
-import tempfile
 from pathlib import Path
 import pytest
 
 from scripts.download_models import (
     MODEL_REGISTRY,
     compute_sha256,
-    ensure_models,
 )
 from backend.app.core.config import settings
 

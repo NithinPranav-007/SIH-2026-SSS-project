@@ -2,7 +2,6 @@
 Model Evaluation Script for Site-Separated Sonar Anomaly Validation.
 """
 
-import os
 import argparse
 import sys
 

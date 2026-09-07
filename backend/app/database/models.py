@@ -313,3 +313,87 @@ class TrainingSampleModel(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
     contact = relationship("ContactModel", back_populates="training_samples")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DRIFT FORECASTING & OCEAN INTELLIGENCE MODELS (Phase 2 Upgrade)
+# ─────────────────────────────────────────────────────────────────────────────
+
+class DriftForecastModel(Base):
+    """
+    Persistent record of an ocean drift forecast for a marine contact (e.g. ghost net).
+    """
+    __tablename__ = "drift_forecasts"
+
+    forecast_id = Column(String(64), primary_key=True, index=True)
+    contact_id = Column(String(64), ForeignKey("contacts.contact_id", ondelete="SET NULL"), nullable=True, index=True)
+    initial_latitude = Column(Float, nullable=False)
+    initial_longitude = Column(Float, nullable=False)
+    initial_timestamp = Column(DateTime(timezone=True), nullable=False)
+    depth = Column(Float, default=0.494)
+    model_name = Column(String(64), nullable=False)
+    model_version = Column(String(64), nullable=False)
+    data_version = Column(String(64), default="glorys12v1-daily")
+    status = Column(String(32), default="COMPLETED")
+    execution_mode = Column(String(32), default="REANALYSIS_ESTIMATE")  # REANALYSIS_ESTIMATE | OPERATIONAL_FORECAST
+    hotspot_score = Column(Float, default=0.0)
+    hotspot_evidence = Column(JSON, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
+    contact = relationship("ContactModel", backref="drift_forecasts")
+    trajectory_points = relationship("DriftTrajectoryPointModel", back_populates="forecast", cascade="all, delete-orphan")
+    uncertainty_regions = relationship("DriftUncertaintyModel", back_populates="forecast", cascade="all, delete-orphan")
+
+
+class DriftTrajectoryPointModel(Base):
+    """
+    Spatial-temporal waypoint along a simulated drift trajectory.
+    """
+    __tablename__ = "drift_trajectory_points"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    forecast_id = Column(String(64), ForeignKey("drift_forecasts.forecast_id", ondelete="CASCADE"), nullable=False, index=True)
+    step_index = Column(Integer, nullable=False)
+    timestamp = Column(DateTime(timezone=True), nullable=False)
+    horizon_hours = Column(Float, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    east_displacement = Column(Float, nullable=False)   # meters
+    north_displacement = Column(Float, nullable=False)  # meters
+    uncertainty_radius = Column(Float, nullable=False)  # km
+    model = Column(String(64), nullable=False)
+    speed = Column(Float, nullable=True)               # m/s
+    heading = Column(Float, nullable=True)             # deg (0-360)
+
+    forecast = relationship("DriftForecastModel", back_populates="trajectory_points")
+
+
+class DriftModelRunModel(Base):
+    """
+    Provenance registry for trained drift ML models and experiments.
+    """
+    __tablename__ = "drift_model_runs"
+
+    run_id = Column(String(64), primary_key=True)
+    model_name = Column(String(64), nullable=False)
+    version = Column(String(64), nullable=False)
+    training_date = Column(DateTime(timezone=True), default=lambda: datetime.datetime.now(datetime.timezone.utc))
+    hyperparameters = Column(JSON, nullable=True)
+    metrics = Column(JSON, nullable=True)
+    status = Column(String(32), default="candidate")  # candidate | validated | champion | rejected
+    checksum = Column(String(64), nullable=True)
+
+
+class DriftUncertaintyModel(Base):
+    """
+    Empirical or probabilistic spatial uncertainty boundaries for multi-horizon forecast.
+    """
+    __tablename__ = "drift_uncertainties"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    forecast_id = Column(String(64), ForeignKey("drift_forecasts.forecast_id", ondelete="CASCADE"), nullable=False, index=True)
+    horizon_hours = Column(Float, nullable=False)       # 24, 48, 72
+    uncertainty_radius_km = Column(Float, nullable=False)
+    polygon_geojson = Column(JSON, nullable=True)
+
+    forecast = relationship("DriftForecastModel", back_populates="uncertainty_regions")

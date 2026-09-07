@@ -3,7 +3,6 @@ Tests for Unknown Acoustic Anomaly Detection (UnknownAnomalyDetector).
 """
 
 import numpy as np
-import pytest
 from ml.inference.anomaly import UnknownAnomalyDetector
 
 

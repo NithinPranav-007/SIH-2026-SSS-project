@@ -4,7 +4,6 @@ Tests for DRISHTI Preprocessing Pipeline and Lee Speckle Filtering.
 
 import pytest
 import numpy as np
-import cv2
 
 from ml.preprocessing.filters import apply_lee_filter
 from ml.preprocessing.drishti_preprocess import drishti_preprocess, PREPROCESSING_VERSION
@@ -35,7 +34,7 @@ class TestDrishtiPreprocessing:
         orig_roi = sample_sonar_patch[50:150, 50:150]
         filtered = apply_lee_filter(sample_sonar_patch, window_size=5, noise_var=0.04)
         filtered_roi = filtered[50:150, 50:150]
-        
+
         # Lee filter should reduce local variance in homogeneous noise region
         assert np.var(filtered_roi) < np.var(orig_roi)
 
@@ -48,7 +47,7 @@ class TestDrishtiPreprocessing:
     def test_drishti_preprocess_immutability(self, sample_sonar_patch):
         original_copy = sample_sonar_patch.copy()
         processed, meta = drishti_preprocess(sample_sonar_patch)
-        
+
         # Verify original array was not mutated in place
         assert np.array_equal(sample_sonar_patch, original_copy)
         # Verify 3-channel BGR format output for YOLOv8s

@@ -103,7 +103,7 @@ class GeolocationService:
         """Returns the series of navigation track waypoints for map rendering."""
         if self.nav_df is None or self.nav_df.empty:
             return []
-        
+
         points = []
         for _, row in self.nav_df.iterrows():
             points.append({
