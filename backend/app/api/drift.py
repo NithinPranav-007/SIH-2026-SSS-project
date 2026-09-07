@@ -71,6 +71,7 @@ async def get_drift_models():
     }
 
 
+@router.get("/api/drift/models/comparison")
 @router.get("/api/drift/metrics")
 async def get_drift_metrics():
     """
