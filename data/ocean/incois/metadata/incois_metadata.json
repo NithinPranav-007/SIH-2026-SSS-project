@@ -1,7 +1,7 @@
 {
   "source": "INCOIS_LAS",
   "status": "AVAILABLE",
-  "source_mode": "ONLINE",
+  "source_mode": "CACHED",
   "endpoint_url": "https://las.incois.gov.in/las/output/3E501F741E424922D358B673CBA82351_ferret_listing.txt",
   "dataset_name": "/home/las/datasets/argo/ValueAddedProducts.nc",
   "product_family": "Argo Value Added Products",
@@ -70,5 +70,5 @@
   "contains_currents_uo_vo": false,
   "contains_winds": false,
   "contains_waves": false,
-  "last_audited": "2026-09-07T13:38:02.787318+00:00"
+  "last_audited": "2026-09-07T14:08:24.326868+00:00"
 }
