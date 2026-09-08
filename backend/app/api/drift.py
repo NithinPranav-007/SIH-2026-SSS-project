@@ -44,6 +44,7 @@ async def predict_drift(
         forecast = service.predict_drift(request)
         return forecast
     except Exception as exc:
+        logger.error("Drift prediction failed: %s", exc, exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Drift prediction failed: {str(exc)}"
